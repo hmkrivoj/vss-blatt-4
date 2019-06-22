@@ -49,8 +49,19 @@ func (*CinemaHallHandler) Delete(context.Context, *proto.DeleteRequest, *proto.D
 	panic("implement me")
 }
 
-func (*CinemaHallHandler) FindAll(context.Context, *proto.FindAllRequest, *proto.FindAllResponse) error {
-	panic("implement me")
+func (handler *CinemaHallHandler) FindAll(ctx context.Context, req *proto.FindAllRequest, res *proto.FindAllResponse) error {
+	halls := make([]*proto.CinemaHall, 0)
+	for _, hall := range handler.cinemaHalls {
+		halls = append(halls, &proto.CinemaHall{
+			Id:   hall.id,
+			Name: hall.name,
+			Rows: hall.rows,
+			Cols: hall.cols,
+		})
+	}
+	res.Halls = halls
+
+	return nil
 }
 
 func main() {
