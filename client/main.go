@@ -11,12 +11,17 @@ func main() {
 	service := micro.NewService(micro.Name("cinema.client"))
 	service.Init()
 
-	client := proto.NewCinemaHallService("cinema.cinema_hall", service.Client())
+	client := proto.NewCinemaHallService("cinema.cinema_hall.service", service.Client())
 
-	rsp, _ := client.Create(context.TODO(), &proto.CreateRequest{Name: "Kino 1", Cols: 12, Rows: 8})
-	fmt.Printf("%v\n", rsp)
-	rsp, _ = client.Create(context.TODO(), &proto.CreateRequest{Name: "Kino 2", Cols: 20, Rows: 10})
-	fmt.Printf("%v\n", rsp)
-	rsp1, _ := client.FindAll(context.TODO(), &proto.FindAllRequest{})
-	fmt.Printf("%v\n", rsp1)
+	createResponse, _ := client.Create(context.TODO(), &proto.CreateRequest{Name: "Kino 1", Cols: 12, Rows: 8})
+	fmt.Printf("Created %v\n", createResponse)
+	createResponse, _ = client.Create(context.TODO(), &proto.CreateRequest{Name: "Kino 2", Cols: 20, Rows: 10})
+	fmt.Printf("Created %v\n", createResponse)
+	findAllResponse, _ := client.FindAll(context.TODO(), &proto.FindAllRequest{})
+	fmt.Printf("Found %v\n", findAllResponse)
+	deleteResponse, _ := client.Delete(context.TODO(), &proto.DeleteRequest{Id: 1})
+	fmt.Printf("Deleted %v\n", deleteResponse)
+	findAllResponse, _ = client.FindAll(context.TODO(), &proto.FindAllRequest{})
+	fmt.Printf("Found %v\n", findAllResponse)
+
 }
