@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+service CinemaHallService {
+    rpc Create(CreateRequest) returns (CreateResponse);
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    rpc FindAll(FindAllRequest) returns (FindAllResponse);
+}
+
+message CreateRequest {
+    string name = 1;
+    int32 rows = 2;
+    int32 cols = 3;
+}
+
+message CreateResponse {
+    CinemaHall hall = 1;
+}
+
+message DeleteRequest {
+    int64 id = 1;
+}
+
+message DeleteResponse {
+    CinemaHall hall = 1;
+}
+
+message FindAllRequest {}
+
+message FindAllResponse {
+    repeated CinemaHall halls = 1;
+}
+
+message CinemaHall {
+    int64 id = 1;
+    string name = 2;
+    int32 rows = 3;
+    int32 cols = 4;
+}
