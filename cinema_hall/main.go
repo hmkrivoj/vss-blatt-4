@@ -14,6 +14,13 @@ type CinemaHallHandler struct {
 	cinemaHalls map[int64]cinemaHall
 }
 
+func NewCinemaHallHandler() *CinemaHallHandler {
+	handler := &CinemaHallHandler{}
+	handler.idCounter = 1
+	handler.cinemaHalls = make(map[int64]cinemaHall)
+	return handler
+}
+
 type cinemaHall struct {
 	id   int64
 	name string
@@ -65,10 +72,10 @@ func (handler *CinemaHallHandler) FindAll(ctx context.Context, req *proto.FindAl
 }
 
 func main() {
-	service := micro.NewService(micro.Name("cinema_hall"))
+	service := micro.NewService(micro.Name("cinema.cinema_hall"))
 	service.Init()
 
-	err := proto.RegisterCinemaHallServiceHandler(service.Server(), new(CinemaHallHandler))
+	err := proto.RegisterCinemaHallServiceHandler(service.Server(), NewCinemaHallHandler())
 	if err != nil {
 		log.Fatal(err)
 	}
