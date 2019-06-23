@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+service UserService {
+    rpc Create (CreateUserRequest) returns (CreateUserResponse);
+    rpc Delete (DeleteUserRequest) returns (DeleteUserResponse);
+    rpc FindAll (FindAllUsersRequest) returns (FindAllUsersResponse);
+}
+
+message CreateUserRequest {
+    string title = 1;
+}
+
+message CreateUserResponse {
+    User user = 1;
+}
+
+message DeleteUserRequest {
+    int64 id = 1;
+}
+
+message DeleteUserResponse {
+    User user = 1;
+}
+
+message FindAllUsersRequest {}
+
+message FindAllUsersResponse {
+    repeated User users = 1;
+}
+
+message User {
+    int64 id = 1;
+    string name = 2;
+}
