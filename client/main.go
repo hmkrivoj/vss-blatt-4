@@ -13,15 +13,15 @@ func main() {
 
 	movieService := protoMovie.NewMovieService("cinema.movie.service", service.Client())
 
-	createResponseMovie, _ := movieService.Create(context.TODO(), &protoMovie.CreateRequest{Title: "Fight Club"})
+	createResponseMovie, _ := movieService.Create(context.TODO(), &protoMovie.CreateMovieRequest{Title: "Fight Club"})
 	fmt.Printf("Created %v\n", createResponseMovie)
-	createResponseMovie, _ = movieService.Create(context.TODO(), &protoMovie.CreateRequest{Title: "Se7en"})
+	createResponseMovie, _ = movieService.Create(context.TODO(), &protoMovie.CreateMovieRequest{Title: "Se7en"})
 	fmt.Printf("Created %v\n", createResponseMovie)
-	findAllResponseMovie, _ := movieService.FindAll(context.TODO(), &protoMovie.FindAllRequest{})
+	findAllResponseMovie, _ := movieService.FindAll(context.TODO(), &protoMovie.FindAllMoviesRequest{})
 	fmt.Printf("Found %v\n", findAllResponseMovie)
-	deleteResponseMovie, _ := movieService.Delete(context.TODO(), &protoMovie.DeleteRequest{Id: 1})
+	deleteResponseMovie, _ := movieService.Delete(context.TODO(), &protoMovie.DeleteMovieRequest{Id: 1})
 	fmt.Printf("Deleted %v\n", deleteResponseMovie)
-	findAllResponseMovie, _ = movieService.FindAll(context.TODO(), &protoMovie.FindAllRequest{})
+	findAllResponseMovie, _ = movieService.FindAll(context.TODO(), &protoMovie.FindAllMoviesRequest{})
 	fmt.Printf("Found %v\n", findAllResponseMovie)
 
 }

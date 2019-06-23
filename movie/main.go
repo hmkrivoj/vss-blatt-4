@@ -29,7 +29,7 @@ type movie struct {
 	title string
 }
 
-func (handler *MovieHandler) Create(ctx context.Context, req *proto.CreateRequest, res *proto.CreateResponse) error {
+func (handler *MovieHandler) Create(ctx context.Context, req *proto.CreateMovieRequest, res *proto.CreateMovieResponse) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -50,7 +50,7 @@ func (handler *MovieHandler) Create(ctx context.Context, req *proto.CreateReques
 	return nil
 }
 
-func (handler *MovieHandler) Delete(ctx context.Context, req *proto.DeleteRequest, res *proto.DeleteResponse) error {
+func (handler *MovieHandler) Delete(ctx context.Context, req *proto.DeleteMovieRequest, res *proto.DeleteMovieResponse) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -70,7 +70,7 @@ func (handler *MovieHandler) Delete(ctx context.Context, req *proto.DeleteReques
 	return err
 }
 
-func (handler *MovieHandler) FindAll(ctx context.Context, req *proto.FindAllRequest, res *proto.FindAllResponse) error {
+func (handler *MovieHandler) FindAll(ctx context.Context, req *proto.FindAllMoviesRequest, res *proto.FindAllMoviesResponse) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 

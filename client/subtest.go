@@ -8,7 +8,7 @@ import (
 	protoMovie "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/movie/proto"
 )
 
-func callBackMovie(ctx context.Context, event *protoMovie.DeleteResponse) error {
+func callBackMovie(ctx context.Context, event *protoMovie.DeleteMovieResponse) error {
 	fmt.Printf("Delete event: %v", event)
 	return nil
 }

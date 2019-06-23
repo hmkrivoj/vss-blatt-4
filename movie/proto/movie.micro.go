@@ -34,9 +34,9 @@ var _ server.Option
 // Client API for MovieService service
 
 type MovieService interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
-	FindAll(ctx context.Context, in *FindAllRequest, opts ...client.CallOption) (*FindAllResponse, error)
+	Create(ctx context.Context, in *CreateMovieRequest, opts ...client.CallOption) (*CreateMovieResponse, error)
+	Delete(ctx context.Context, in *DeleteMovieRequest, opts ...client.CallOption) (*DeleteMovieResponse, error)
+	FindAll(ctx context.Context, in *FindAllMoviesRequest, opts ...client.CallOption) (*FindAllMoviesResponse, error)
 }
 
 type movieService struct {
@@ -57,9 +57,9 @@ func NewMovieService(name string, c client.Client) MovieService {
 	}
 }
 
-func (c *movieService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+func (c *movieService) Create(ctx context.Context, in *CreateMovieRequest, opts ...client.CallOption) (*CreateMovieResponse, error) {
 	req := c.c.NewRequest(c.name, "MovieService.Create", in)
-	out := new(CreateResponse)
+	out := new(CreateMovieResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -67,9 +67,9 @@ func (c *movieService) Create(ctx context.Context, in *CreateRequest, opts ...cl
 	return out, nil
 }
 
-func (c *movieService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+func (c *movieService) Delete(ctx context.Context, in *DeleteMovieRequest, opts ...client.CallOption) (*DeleteMovieResponse, error) {
 	req := c.c.NewRequest(c.name, "MovieService.Delete", in)
-	out := new(DeleteResponse)
+	out := new(DeleteMovieResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +77,9 @@ func (c *movieService) Delete(ctx context.Context, in *DeleteRequest, opts ...cl
 	return out, nil
 }
 
-func (c *movieService) FindAll(ctx context.Context, in *FindAllRequest, opts ...client.CallOption) (*FindAllResponse, error) {
+func (c *movieService) FindAll(ctx context.Context, in *FindAllMoviesRequest, opts ...client.CallOption) (*FindAllMoviesResponse, error) {
 	req := c.c.NewRequest(c.name, "MovieService.FindAll", in)
-	out := new(FindAllResponse)
+	out := new(FindAllMoviesResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -90,16 +90,16 @@ func (c *movieService) FindAll(ctx context.Context, in *FindAllRequest, opts ...
 // Server API for MovieService service
 
 type MovieServiceHandler interface {
-	Create(context.Context, *CreateRequest, *CreateResponse) error
-	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
-	FindAll(context.Context, *FindAllRequest, *FindAllResponse) error
+	Create(context.Context, *CreateMovieRequest, *CreateMovieResponse) error
+	Delete(context.Context, *DeleteMovieRequest, *DeleteMovieResponse) error
+	FindAll(context.Context, *FindAllMoviesRequest, *FindAllMoviesResponse) error
 }
 
 func RegisterMovieServiceHandler(s server.Server, hdlr MovieServiceHandler, opts ...server.HandlerOption) error {
 	type movieService interface {
-		Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error
-		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
-		FindAll(ctx context.Context, in *FindAllRequest, out *FindAllResponse) error
+		Create(ctx context.Context, in *CreateMovieRequest, out *CreateMovieResponse) error
+		Delete(ctx context.Context, in *DeleteMovieRequest, out *DeleteMovieResponse) error
+		FindAll(ctx context.Context, in *FindAllMoviesRequest, out *FindAllMoviesResponse) error
 	}
 	type MovieService struct {
 		movieService
@@ -112,14 +112,14 @@ type movieServiceHandler struct {
 	MovieServiceHandler
 }
 
-func (h *movieServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+func (h *movieServiceHandler) Create(ctx context.Context, in *CreateMovieRequest, out *CreateMovieResponse) error {
 	return h.MovieServiceHandler.Create(ctx, in, out)
 }
 
-func (h *movieServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+func (h *movieServiceHandler) Delete(ctx context.Context, in *DeleteMovieRequest, out *DeleteMovieResponse) error {
 	return h.MovieServiceHandler.Delete(ctx, in, out)
 }
 
-func (h *movieServiceHandler) FindAll(ctx context.Context, in *FindAllRequest, out *FindAllResponse) error {
+func (h *movieServiceHandler) FindAll(ctx context.Context, in *FindAllMoviesRequest, out *FindAllMoviesResponse) error {
 	return h.MovieServiceHandler.FindAll(ctx, in, out)
 }

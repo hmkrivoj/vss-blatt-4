@@ -31,7 +31,7 @@ type cinemaHall struct {
 	cols int32
 }
 
-func (handler *CinemaHallHandler) Create(ctx context.Context, req *proto.CreateRequest, res *proto.CreateResponse) error {
+func (handler *CinemaHallHandler) Create(ctx context.Context, req *proto.CreateCinemaHallRequest, res *proto.CreateCinemaHallResponse) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -56,7 +56,7 @@ func (handler *CinemaHallHandler) Create(ctx context.Context, req *proto.CreateR
 	return nil
 }
 
-func (handler *CinemaHallHandler) Delete(ctx context.Context, req *proto.DeleteRequest, res *proto.DeleteResponse) error {
+func (handler *CinemaHallHandler) Delete(ctx context.Context, req *proto.DeleteCinemaHallRequest, res *proto.DeleteCinemaHallResponse) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -78,7 +78,7 @@ func (handler *CinemaHallHandler) Delete(ctx context.Context, req *proto.DeleteR
 	return err
 }
 
-func (handler *CinemaHallHandler) FindAll(ctx context.Context, req *proto.FindAllRequest, res *proto.FindAllResponse) error {
+func (handler *CinemaHallHandler) FindAll(ctx context.Context, req *proto.FindAllCinemaHallsRequest, res *proto.FindAllCinemaHallsResponse) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
