@@ -113,13 +113,11 @@ func NewCinemaHallDeletedHandler(db *dataBase) *cinemaShowingDeletedHandler {
 }
 
 type serviceHandler struct {
-	db  *dataBase
-	pub micro.Publisher
+	db *dataBase
 }
 
-func NewReservationHandler(publisher micro.Publisher, db *dataBase) *serviceHandler {
+func NewReservationHandler(db *dataBase) *serviceHandler {
 	handler := &serviceHandler{}
-	handler.pub = publisher
 	handler.db = db
 	return handler
 }
@@ -173,8 +171,7 @@ func (handler *serviceHandler) Delete(ctx context.Context, req *protoReservation
 		Seats:   pSeats,
 	}
 
-	err = handler.pub.Publish(context.Background(), res)
-	return err
+	return nil
 }
 
 func (handler *serviceHandler) FindAll(ctx context.Context, req *protoReservation.FindAllReservationsRequest, res *protoReservation.FindAllReservationsResponse) error {
@@ -206,9 +203,8 @@ func main() {
 	service := micro.NewService(micro.Name("cinema.cinema_showing.service"))
 	service.Init()
 
-	publisher := micro.NewPublisher("cinema.cinema_showing.deleted", service.Client())
 	db := newDataBase()
-	handler := NewReservationHandler(publisher, db)
+	handler := NewReservationHandler(db)
 	deletedHallHandler := NewCinemaHallDeletedHandler(db)
 
 	err := micro.RegisterSubscriber("cinema.cinema_hall.deleted", service.Server(), deletedHallHandler)
