@@ -11,6 +11,18 @@ import (
 	"sync"
 )
 
+type CinemaHallDeletedHandler struct{}
+
+func NewCinemaHallDeletedHandler() *CinemaHallDeletedHandler {
+	return &CinemaHallDeletedHandler{}
+}
+
+type MovieDeletedHandler struct{}
+
+func NewMovieDeletedHandler() *MovieDeletedHandler {
+	return &MovieDeletedHandler{}
+}
+
 type CinemaShowingHandler struct {
 	mutex          sync.Mutex
 	idCounter      int64
@@ -93,16 +105,14 @@ func (handler *CinemaShowingHandler) FindAll(ctx context.Context, req *protoCine
 	return nil
 }
 
-func (handler *CinemaShowingHandler) CinemaHallDeleted(context.Context, *protoCinemaHall.DeleteCinemaHallResponse) {
-	handler.mutex.Lock()
-	defer handler.mutex.Unlock()
-
+func (handler *MovieDeletedHandler) CinemaHallDeleted(context.Context, *protoCinemaHall.DeleteCinemaHallResponse) error {
+	log.Logf("Received hall deleted")
+	return nil
 }
 
-func (handler *CinemaShowingHandler) MovieDeleted(context.Context, *protoMovie.DeleteMovieResponse) {
-	handler.mutex.Lock()
-	defer handler.mutex.Unlock()
-
+func (handler *CinemaHallDeletedHandler) MovieDeleted(context.Context, *protoMovie.DeleteMovieResponse) error {
+	log.Logf("Received movie deleted")
+	return nil
 }
 
 func main() {
@@ -111,13 +121,15 @@ func main() {
 
 	publisher := micro.NewPublisher("cinema.cinema_showing.deleted", service.Client())
 	handler := NewCinemaShowingHandler(publisher)
+	deletedHallHandler := NewCinemaHallDeletedHandler()
+	deletedMovieHandler := NewMovieDeletedHandler()
 
-	err := micro.RegisterSubscriber("cinema.cinema_hall.deleted", service.Server(), handler)
+	err := micro.RegisterSubscriber("cinema.cinema_hall.deleted", service.Server(), deletedHallHandler)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = micro.RegisterSubscriber("cinema.movie.deleted", service.Server(), handler)
+	err = micro.RegisterSubscriber("cinema.movie.deleted", service.Server(), deletedMovieHandler)
 	if err != nil {
 		log.Fatal(err)
 	}
