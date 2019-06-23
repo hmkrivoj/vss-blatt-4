@@ -36,7 +36,7 @@ func (handler *UserHandler) Create(ctx context.Context, req *proto.CreateUserReq
 
 	user := user{
 		id:   id,
-		name: req.Title,
+		name: req.Name,
 	}
 	handler.users[id] = user
 
