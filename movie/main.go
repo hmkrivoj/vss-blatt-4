@@ -16,7 +16,7 @@ type MovieHandler struct {
 	pub       micro.Publisher
 }
 
-func NewCinemaHallHandler(publisher micro.Publisher) *MovieHandler {
+func NewMovieHandler(publisher micro.Publisher) *MovieHandler {
 	handler := &MovieHandler{}
 	handler.idCounter = 1
 	handler.movies = make(map[int64]movie)
@@ -91,7 +91,7 @@ func main() {
 	service.Init()
 
 	publisher := micro.NewPublisher("cinema.movie.deleted", service.Client())
-	handler := NewCinemaHallHandler(publisher)
+	handler := NewMovieHandler(publisher)
 
 	err := proto.RegisterMovieServiceHandler(service.Server(), handler)
 	if err != nil {
