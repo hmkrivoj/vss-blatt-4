@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+service CinemaShowingService {
+    rpc Create (CreateCinemaShowingRequest) returns (CreateCinemaShowingResponse);
+    rpc Delete (DeleteCinemaShowingRequest) returns (DeleteCinemaShowingResponse);
+    rpc FindAll (FindAllCinemaShowingsRequest) returns (FindAllCinemaShowingsResponse);
+}
+
+message CreateCinemaShowingRequest {
+    int64 movie = 1;
+    int64 cinemaHall = 2;
+}
+
+message CreateCinemaShowingResponse {
+    CinemaShowing showing = 1;
+}
+
+message DeleteCinemaShowingRequest {
+    int64 id = 1;
+}
+
+message DeleteCinemaShowingResponse {
+    CinemaShowing showing = 1;
+}
+
+message FindAllCinemaShowingsRequest {}
+
+message FindAllCinemaShowingsResponse {
+    repeated CinemaShowing showings = 1;
+}
+
+message CinemaShowing {
+    int64 id = 1;
+    int64 movie = 2;
+    int64 cinemaHall = 3;
+}
