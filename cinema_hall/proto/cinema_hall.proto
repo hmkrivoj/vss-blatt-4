@@ -1,32 +1,32 @@
 syntax = "proto3";
 
 service CinemaHallService {
-    rpc Create(CreateRequest) returns (CreateResponse);
-    rpc Delete(DeleteRequest) returns (DeleteResponse);
-    rpc FindAll(FindAllRequest) returns (FindAllResponse);
+    rpc Create (CreateCinemaHallRequest) returns (CreateCinemaHallResponse);
+    rpc Delete (DeleteCinemaHallRequest) returns (DeleteCinemaHallResponse);
+    rpc FindAll (FindAllCinemaHallsRequest) returns (FindAllCinemaHallsResponse);
 }
 
-message CreateRequest {
+message CreateCinemaHallRequest {
     string name = 1;
     int32 rows = 2;
     int32 cols = 3;
 }
 
-message CreateResponse {
+message CreateCinemaHallResponse {
     CinemaHall hall = 1;
 }
 
-message DeleteRequest {
+message DeleteCinemaHallRequest {
     int64 id = 1;
 }
 
-message DeleteResponse {
+message DeleteCinemaHallResponse {
     CinemaHall hall = 1;
 }
 
-message FindAllRequest {}
+message FindAllCinemaHallsRequest {}
 
-message FindAllResponse {
+message FindAllCinemaHallsResponse {
     repeated CinemaHall halls = 1;
 }
 

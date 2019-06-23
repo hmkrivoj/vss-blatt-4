@@ -34,9 +34,9 @@ var _ server.Option
 // Client API for CinemaHallService service
 
 type CinemaHallService interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
-	FindAll(ctx context.Context, in *FindAllRequest, opts ...client.CallOption) (*FindAllResponse, error)
+	Create(ctx context.Context, in *CreateCinemaHallRequest, opts ...client.CallOption) (*CreateCinemaHallResponse, error)
+	Delete(ctx context.Context, in *DeleteCinemaHallRequest, opts ...client.CallOption) (*DeleteCinemaHallResponse, error)
+	FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, opts ...client.CallOption) (*FindAllCinemaHallsResponse, error)
 }
 
 type cinemaHallService struct {
@@ -57,9 +57,9 @@ func NewCinemaHallService(name string, c client.Client) CinemaHallService {
 	}
 }
 
-func (c *cinemaHallService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+func (c *cinemaHallService) Create(ctx context.Context, in *CreateCinemaHallRequest, opts ...client.CallOption) (*CreateCinemaHallResponse, error) {
 	req := c.c.NewRequest(c.name, "CinemaHallService.Create", in)
-	out := new(CreateResponse)
+	out := new(CreateCinemaHallResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -67,9 +67,9 @@ func (c *cinemaHallService) Create(ctx context.Context, in *CreateRequest, opts 
 	return out, nil
 }
 
-func (c *cinemaHallService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+func (c *cinemaHallService) Delete(ctx context.Context, in *DeleteCinemaHallRequest, opts ...client.CallOption) (*DeleteCinemaHallResponse, error) {
 	req := c.c.NewRequest(c.name, "CinemaHallService.Delete", in)
-	out := new(DeleteResponse)
+	out := new(DeleteCinemaHallResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +77,9 @@ func (c *cinemaHallService) Delete(ctx context.Context, in *DeleteRequest, opts 
 	return out, nil
 }
 
-func (c *cinemaHallService) FindAll(ctx context.Context, in *FindAllRequest, opts ...client.CallOption) (*FindAllResponse, error) {
+func (c *cinemaHallService) FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, opts ...client.CallOption) (*FindAllCinemaHallsResponse, error) {
 	req := c.c.NewRequest(c.name, "CinemaHallService.FindAll", in)
-	out := new(FindAllResponse)
+	out := new(FindAllCinemaHallsResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -90,16 +90,16 @@ func (c *cinemaHallService) FindAll(ctx context.Context, in *FindAllRequest, opt
 // Server API for CinemaHallService service
 
 type CinemaHallServiceHandler interface {
-	Create(context.Context, *CreateRequest, *CreateResponse) error
-	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
-	FindAll(context.Context, *FindAllRequest, *FindAllResponse) error
+	Create(context.Context, *CreateCinemaHallRequest, *CreateCinemaHallResponse) error
+	Delete(context.Context, *DeleteCinemaHallRequest, *DeleteCinemaHallResponse) error
+	FindAll(context.Context, *FindAllCinemaHallsRequest, *FindAllCinemaHallsResponse) error
 }
 
 func RegisterCinemaHallServiceHandler(s server.Server, hdlr CinemaHallServiceHandler, opts ...server.HandlerOption) error {
 	type cinemaHallService interface {
-		Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error
-		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
-		FindAll(ctx context.Context, in *FindAllRequest, out *FindAllResponse) error
+		Create(ctx context.Context, in *CreateCinemaHallRequest, out *CreateCinemaHallResponse) error
+		Delete(ctx context.Context, in *DeleteCinemaHallRequest, out *DeleteCinemaHallResponse) error
+		FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, out *FindAllCinemaHallsResponse) error
 	}
 	type CinemaHallService struct {
 		cinemaHallService
@@ -112,14 +112,14 @@ type cinemaHallServiceHandler struct {
 	CinemaHallServiceHandler
 }
 
-func (h *cinemaHallServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+func (h *cinemaHallServiceHandler) Create(ctx context.Context, in *CreateCinemaHallRequest, out *CreateCinemaHallResponse) error {
 	return h.CinemaHallServiceHandler.Create(ctx, in, out)
 }
 
-func (h *cinemaHallServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+func (h *cinemaHallServiceHandler) Delete(ctx context.Context, in *DeleteCinemaHallRequest, out *DeleteCinemaHallResponse) error {
 	return h.CinemaHallServiceHandler.Delete(ctx, in, out)
 }
 
-func (h *cinemaHallServiceHandler) FindAll(ctx context.Context, in *FindAllRequest, out *FindAllResponse) error {
+func (h *cinemaHallServiceHandler) FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, out *FindAllCinemaHallsResponse) error {
 	return h.CinemaHallServiceHandler.FindAll(ctx, in, out)
 }

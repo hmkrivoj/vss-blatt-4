@@ -20,7 +20,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type CreateRequest struct {
+type CreateCinemaHallRequest struct {
 	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Rows                 int32    `protobuf:"varint,2,opt,name=rows,proto3" json:"rows,omitempty"`
 	Cols                 int32    `protobuf:"varint,3,opt,name=cols,proto3" json:"cols,omitempty"`
@@ -29,233 +29,233 @@ type CreateRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateRequest) Reset()         { *m = CreateRequest{} }
-func (m *CreateRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateRequest) ProtoMessage()    {}
-func (*CreateRequest) Descriptor() ([]byte, []int) {
+func (m *CreateCinemaHallRequest) Reset()         { *m = CreateCinemaHallRequest{} }
+func (m *CreateCinemaHallRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateCinemaHallRequest) ProtoMessage()    {}
+func (*CreateCinemaHallRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_48e8c9aa0203f6fd, []int{0}
 }
 
-func (m *CreateRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateRequest.Unmarshal(m, b)
+func (m *CreateCinemaHallRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateCinemaHallRequest.Unmarshal(m, b)
 }
-func (m *CreateRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateRequest.Marshal(b, m, deterministic)
+func (m *CreateCinemaHallRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateCinemaHallRequest.Marshal(b, m, deterministic)
 }
-func (m *CreateRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateRequest.Merge(m, src)
+func (m *CreateCinemaHallRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateCinemaHallRequest.Merge(m, src)
 }
-func (m *CreateRequest) XXX_Size() int {
-	return xxx_messageInfo_CreateRequest.Size(m)
+func (m *CreateCinemaHallRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateCinemaHallRequest.Size(m)
 }
-func (m *CreateRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateRequest.DiscardUnknown(m)
+func (m *CreateCinemaHallRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateCinemaHallRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CreateRequest proto.InternalMessageInfo
+var xxx_messageInfo_CreateCinemaHallRequest proto.InternalMessageInfo
 
-func (m *CreateRequest) GetName() string {
+func (m *CreateCinemaHallRequest) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-func (m *CreateRequest) GetRows() int32 {
+func (m *CreateCinemaHallRequest) GetRows() int32 {
 	if m != nil {
 		return m.Rows
 	}
 	return 0
 }
 
-func (m *CreateRequest) GetCols() int32 {
+func (m *CreateCinemaHallRequest) GetCols() int32 {
 	if m != nil {
 		return m.Cols
 	}
 	return 0
 }
 
-type CreateResponse struct {
+type CreateCinemaHallResponse struct {
 	Hall                 *CinemaHall `protobuf:"bytes,1,opt,name=hall,proto3" json:"hall,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
 	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *CreateResponse) Reset()         { *m = CreateResponse{} }
-func (m *CreateResponse) String() string { return proto.CompactTextString(m) }
-func (*CreateResponse) ProtoMessage()    {}
-func (*CreateResponse) Descriptor() ([]byte, []int) {
+func (m *CreateCinemaHallResponse) Reset()         { *m = CreateCinemaHallResponse{} }
+func (m *CreateCinemaHallResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateCinemaHallResponse) ProtoMessage()    {}
+func (*CreateCinemaHallResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_48e8c9aa0203f6fd, []int{1}
 }
 
-func (m *CreateResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateResponse.Unmarshal(m, b)
+func (m *CreateCinemaHallResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateCinemaHallResponse.Unmarshal(m, b)
 }
-func (m *CreateResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateResponse.Marshal(b, m, deterministic)
+func (m *CreateCinemaHallResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateCinemaHallResponse.Marshal(b, m, deterministic)
 }
-func (m *CreateResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateResponse.Merge(m, src)
+func (m *CreateCinemaHallResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateCinemaHallResponse.Merge(m, src)
 }
-func (m *CreateResponse) XXX_Size() int {
-	return xxx_messageInfo_CreateResponse.Size(m)
+func (m *CreateCinemaHallResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateCinemaHallResponse.Size(m)
 }
-func (m *CreateResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateResponse.DiscardUnknown(m)
+func (m *CreateCinemaHallResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateCinemaHallResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CreateResponse proto.InternalMessageInfo
+var xxx_messageInfo_CreateCinemaHallResponse proto.InternalMessageInfo
 
-func (m *CreateResponse) GetHall() *CinemaHall {
+func (m *CreateCinemaHallResponse) GetHall() *CinemaHall {
 	if m != nil {
 		return m.Hall
 	}
 	return nil
 }
 
-type DeleteRequest struct {
+type DeleteCinemaHallRequest struct {
 	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteRequest) Reset()         { *m = DeleteRequest{} }
-func (m *DeleteRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteRequest) ProtoMessage()    {}
-func (*DeleteRequest) Descriptor() ([]byte, []int) {
+func (m *DeleteCinemaHallRequest) Reset()         { *m = DeleteCinemaHallRequest{} }
+func (m *DeleteCinemaHallRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteCinemaHallRequest) ProtoMessage()    {}
+func (*DeleteCinemaHallRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_48e8c9aa0203f6fd, []int{2}
 }
 
-func (m *DeleteRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteRequest.Unmarshal(m, b)
+func (m *DeleteCinemaHallRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteCinemaHallRequest.Unmarshal(m, b)
 }
-func (m *DeleteRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteRequest.Marshal(b, m, deterministic)
+func (m *DeleteCinemaHallRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteCinemaHallRequest.Marshal(b, m, deterministic)
 }
-func (m *DeleteRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteRequest.Merge(m, src)
+func (m *DeleteCinemaHallRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteCinemaHallRequest.Merge(m, src)
 }
-func (m *DeleteRequest) XXX_Size() int {
-	return xxx_messageInfo_DeleteRequest.Size(m)
+func (m *DeleteCinemaHallRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteCinemaHallRequest.Size(m)
 }
-func (m *DeleteRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteRequest.DiscardUnknown(m)
+func (m *DeleteCinemaHallRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteCinemaHallRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DeleteRequest proto.InternalMessageInfo
+var xxx_messageInfo_DeleteCinemaHallRequest proto.InternalMessageInfo
 
-func (m *DeleteRequest) GetId() int64 {
+func (m *DeleteCinemaHallRequest) GetId() int64 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-type DeleteResponse struct {
+type DeleteCinemaHallResponse struct {
 	Hall                 *CinemaHall `protobuf:"bytes,1,opt,name=hall,proto3" json:"hall,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
 	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *DeleteResponse) Reset()         { *m = DeleteResponse{} }
-func (m *DeleteResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteResponse) ProtoMessage()    {}
-func (*DeleteResponse) Descriptor() ([]byte, []int) {
+func (m *DeleteCinemaHallResponse) Reset()         { *m = DeleteCinemaHallResponse{} }
+func (m *DeleteCinemaHallResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteCinemaHallResponse) ProtoMessage()    {}
+func (*DeleteCinemaHallResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_48e8c9aa0203f6fd, []int{3}
 }
 
-func (m *DeleteResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteResponse.Unmarshal(m, b)
+func (m *DeleteCinemaHallResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteCinemaHallResponse.Unmarshal(m, b)
 }
-func (m *DeleteResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteResponse.Marshal(b, m, deterministic)
+func (m *DeleteCinemaHallResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteCinemaHallResponse.Marshal(b, m, deterministic)
 }
-func (m *DeleteResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteResponse.Merge(m, src)
+func (m *DeleteCinemaHallResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteCinemaHallResponse.Merge(m, src)
 }
-func (m *DeleteResponse) XXX_Size() int {
-	return xxx_messageInfo_DeleteResponse.Size(m)
+func (m *DeleteCinemaHallResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteCinemaHallResponse.Size(m)
 }
-func (m *DeleteResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteResponse.DiscardUnknown(m)
+func (m *DeleteCinemaHallResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteCinemaHallResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DeleteResponse proto.InternalMessageInfo
+var xxx_messageInfo_DeleteCinemaHallResponse proto.InternalMessageInfo
 
-func (m *DeleteResponse) GetHall() *CinemaHall {
+func (m *DeleteCinemaHallResponse) GetHall() *CinemaHall {
 	if m != nil {
 		return m.Hall
 	}
 	return nil
 }
 
-type FindAllRequest struct {
+type FindAllCinemaHallsRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FindAllRequest) Reset()         { *m = FindAllRequest{} }
-func (m *FindAllRequest) String() string { return proto.CompactTextString(m) }
-func (*FindAllRequest) ProtoMessage()    {}
-func (*FindAllRequest) Descriptor() ([]byte, []int) {
+func (m *FindAllCinemaHallsRequest) Reset()         { *m = FindAllCinemaHallsRequest{} }
+func (m *FindAllCinemaHallsRequest) String() string { return proto.CompactTextString(m) }
+func (*FindAllCinemaHallsRequest) ProtoMessage()    {}
+func (*FindAllCinemaHallsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_48e8c9aa0203f6fd, []int{4}
 }
 
-func (m *FindAllRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_FindAllRequest.Unmarshal(m, b)
+func (m *FindAllCinemaHallsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FindAllCinemaHallsRequest.Unmarshal(m, b)
 }
-func (m *FindAllRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_FindAllRequest.Marshal(b, m, deterministic)
+func (m *FindAllCinemaHallsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FindAllCinemaHallsRequest.Marshal(b, m, deterministic)
 }
-func (m *FindAllRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_FindAllRequest.Merge(m, src)
+func (m *FindAllCinemaHallsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FindAllCinemaHallsRequest.Merge(m, src)
 }
-func (m *FindAllRequest) XXX_Size() int {
-	return xxx_messageInfo_FindAllRequest.Size(m)
+func (m *FindAllCinemaHallsRequest) XXX_Size() int {
+	return xxx_messageInfo_FindAllCinemaHallsRequest.Size(m)
 }
-func (m *FindAllRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_FindAllRequest.DiscardUnknown(m)
+func (m *FindAllCinemaHallsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_FindAllCinemaHallsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_FindAllRequest proto.InternalMessageInfo
+var xxx_messageInfo_FindAllCinemaHallsRequest proto.InternalMessageInfo
 
-type FindAllResponse struct {
+type FindAllCinemaHallsResponse struct {
 	Halls                []*CinemaHall `protobuf:"bytes,1,rep,name=halls,proto3" json:"halls,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *FindAllResponse) Reset()         { *m = FindAllResponse{} }
-func (m *FindAllResponse) String() string { return proto.CompactTextString(m) }
-func (*FindAllResponse) ProtoMessage()    {}
-func (*FindAllResponse) Descriptor() ([]byte, []int) {
+func (m *FindAllCinemaHallsResponse) Reset()         { *m = FindAllCinemaHallsResponse{} }
+func (m *FindAllCinemaHallsResponse) String() string { return proto.CompactTextString(m) }
+func (*FindAllCinemaHallsResponse) ProtoMessage()    {}
+func (*FindAllCinemaHallsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_48e8c9aa0203f6fd, []int{5}
 }
 
-func (m *FindAllResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_FindAllResponse.Unmarshal(m, b)
+func (m *FindAllCinemaHallsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FindAllCinemaHallsResponse.Unmarshal(m, b)
 }
-func (m *FindAllResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_FindAllResponse.Marshal(b, m, deterministic)
+func (m *FindAllCinemaHallsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FindAllCinemaHallsResponse.Marshal(b, m, deterministic)
 }
-func (m *FindAllResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_FindAllResponse.Merge(m, src)
+func (m *FindAllCinemaHallsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FindAllCinemaHallsResponse.Merge(m, src)
 }
-func (m *FindAllResponse) XXX_Size() int {
-	return xxx_messageInfo_FindAllResponse.Size(m)
+func (m *FindAllCinemaHallsResponse) XXX_Size() int {
+	return xxx_messageInfo_FindAllCinemaHallsResponse.Size(m)
 }
-func (m *FindAllResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_FindAllResponse.DiscardUnknown(m)
+func (m *FindAllCinemaHallsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_FindAllCinemaHallsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_FindAllResponse proto.InternalMessageInfo
+var xxx_messageInfo_FindAllCinemaHallsResponse proto.InternalMessageInfo
 
-func (m *FindAllResponse) GetHalls() []*CinemaHall {
+func (m *FindAllCinemaHallsResponse) GetHalls() []*CinemaHall {
 	if m != nil {
 		return m.Halls
 	}
@@ -326,35 +326,35 @@ func (m *CinemaHall) GetCols() int32 {
 }
 
 func init() {
-	proto.RegisterType((*CreateRequest)(nil), "CreateRequest")
-	proto.RegisterType((*CreateResponse)(nil), "CreateResponse")
-	proto.RegisterType((*DeleteRequest)(nil), "DeleteRequest")
-	proto.RegisterType((*DeleteResponse)(nil), "DeleteResponse")
-	proto.RegisterType((*FindAllRequest)(nil), "FindAllRequest")
-	proto.RegisterType((*FindAllResponse)(nil), "FindAllResponse")
+	proto.RegisterType((*CreateCinemaHallRequest)(nil), "CreateCinemaHallRequest")
+	proto.RegisterType((*CreateCinemaHallResponse)(nil), "CreateCinemaHallResponse")
+	proto.RegisterType((*DeleteCinemaHallRequest)(nil), "DeleteCinemaHallRequest")
+	proto.RegisterType((*DeleteCinemaHallResponse)(nil), "DeleteCinemaHallResponse")
+	proto.RegisterType((*FindAllCinemaHallsRequest)(nil), "FindAllCinemaHallsRequest")
+	proto.RegisterType((*FindAllCinemaHallsResponse)(nil), "FindAllCinemaHallsResponse")
 	proto.RegisterType((*CinemaHall)(nil), "CinemaHall")
 }
 
 func init() { proto.RegisterFile("cinema_hall.proto", fileDescriptor_48e8c9aa0203f6fd) }
 
 var fileDescriptor_48e8c9aa0203f6fd = []byte{
-	// 283 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x41, 0x4b, 0xc3, 0x30,
-	0x14, 0xc7, 0x69, 0xbb, 0x55, 0x7c, 0x63, 0xed, 0x96, 0x53, 0xe9, 0x65, 0x35, 0xa7, 0x0d, 0x24,
-	0xe0, 0xf4, 0x0b, 0xc8, 0x44, 0x04, 0x6f, 0xf1, 0xe2, 0x4d, 0x62, 0xfb, 0xc0, 0x40, 0xd6, 0xcc,
-	0xa6, 0xea, 0x47, 0xf1, 0xeb, 0x4a, 0xd2, 0x6e, 0xa5, 0x61, 0x07, 0x6f, 0x8f, 0xff, 0x7b, 0xfc,
-	0xde, 0xeb, 0xaf, 0x81, 0x65, 0x29, 0x6b, 0xdc, 0x8b, 0xb7, 0x0f, 0xa1, 0x14, 0x3b, 0x34, 0xba,
-	0xd5, 0xf4, 0x19, 0xe6, 0xbb, 0x06, 0x45, 0x8b, 0x1c, 0x3f, 0xbf, 0xd0, 0xb4, 0x84, 0xc0, 0xa4,
-	0x16, 0x7b, 0xcc, 0x82, 0x22, 0x58, 0x5f, 0x72, 0x57, 0xdb, 0xac, 0xd1, 0x3f, 0x26, 0x0b, 0x8b,
-	0x60, 0x3d, 0xe5, 0xae, 0xb6, 0x59, 0xa9, 0x95, 0xc9, 0xa2, 0x2e, 0xb3, 0x35, 0xbd, 0x81, 0xe4,
-	0x08, 0x33, 0x07, 0x5d, 0x1b, 0x24, 0x2b, 0x98, 0xd8, 0x65, 0x8e, 0x36, 0xdb, 0xce, 0xd8, 0xce,
-	0x1d, 0xf0, 0x24, 0x94, 0xe2, 0xae, 0x41, 0x57, 0x30, 0x7f, 0x40, 0x85, 0xc3, 0xfe, 0x04, 0x42,
-	0x59, 0xb9, 0xf9, 0x88, 0x87, 0xb2, 0xb2, 0xcc, 0xe3, 0xc0, 0x7f, 0x99, 0x0b, 0x48, 0x1e, 0x65,
-	0x5d, 0xdd, 0x2b, 0xd5, 0x43, 0xe9, 0x1d, 0xa4, 0xa7, 0xa4, 0xa7, 0x5c, 0xc1, 0xd4, 0x0e, 0x9b,
-	0x2c, 0x28, 0x22, 0x1f, 0xd3, 0x75, 0xe8, 0x2b, 0xc0, 0x10, 0xfa, 0x87, 0x9d, 0x44, 0x85, 0x67,
-	0x44, 0x45, 0x67, 0x44, 0x4d, 0x06, 0x51, 0xdb, 0xdf, 0x00, 0x96, 0x03, 0xfa, 0x05, 0x9b, 0x6f,
-	0x59, 0x22, 0xd9, 0x40, 0xdc, 0xe9, 0x23, 0x09, 0x1b, 0xfd, 0x94, 0x3c, 0x65, 0x9e, 0xd7, 0x0d,
-	0xc4, 0x9d, 0x15, 0x92, 0xb0, 0x91, 0xbf, 0x3c, 0x65, 0x9e, 0xae, 0x6b, 0xb8, 0xe8, 0xbf, 0x9d,
-	0xa4, 0x6c, 0xec, 0x25, 0x5f, 0x30, 0x4f, 0xcb, 0x7b, 0xec, 0x9e, 0xc5, 0xed, 0x5f, 0x00, 0x00,
-	0x00, 0xff, 0xff, 0x01, 0xef, 0x8e, 0x5d, 0x2b, 0x02, 0x00, 0x00,
+	// 288 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x4f, 0x4b, 0xc3, 0x40,
+	0x10, 0xc5, 0xc9, 0x9f, 0x46, 0x9c, 0x82, 0xd0, 0xbd, 0x74, 0x93, 0x1e, 0x8c, 0x7b, 0xaa, 0x97,
+	0x3d, 0xd4, 0xa3, 0x14, 0xd1, 0x8a, 0x78, 0x8e, 0x08, 0xde, 0x64, 0x4d, 0x06, 0x5c, 0xd8, 0x66,
+	0x6b, 0x36, 0xea, 0x27, 0xf5, 0xfb, 0xc8, 0x6e, 0x82, 0x91, 0x36, 0x0b, 0xbd, 0x0d, 0xef, 0xcd,
+	0xbe, 0x19, 0x7e, 0xb3, 0x30, 0x2b, 0x65, 0x8d, 0x5b, 0xf1, 0xfa, 0x2e, 0x94, 0xe2, 0xbb, 0x46,
+	0xb7, 0x9a, 0x3d, 0xc3, 0x7c, 0xd3, 0xa0, 0x68, 0x71, 0xe3, 0xac, 0x47, 0xa1, 0x54, 0x81, 0x1f,
+	0x9f, 0x68, 0x5a, 0x42, 0x20, 0xae, 0xc5, 0x16, 0x69, 0x90, 0x07, 0xcb, 0xd3, 0xc2, 0xd5, 0x56,
+	0x6b, 0xf4, 0xb7, 0xa1, 0x61, 0x1e, 0x2c, 0x27, 0x85, 0xab, 0xad, 0x56, 0x6a, 0x65, 0x68, 0xd4,
+	0x69, 0xb6, 0x66, 0xd7, 0x40, 0x0f, 0x63, 0xcd, 0x4e, 0xd7, 0x06, 0xc9, 0x39, 0xc4, 0x76, 0x01,
+	0x97, 0x3b, 0x5d, 0x4d, 0xf9, 0xbf, 0x16, 0x67, 0xb0, 0x4b, 0x98, 0xdf, 0xa3, 0xc2, 0xb1, 0x9d,
+	0xce, 0x20, 0x94, 0x95, 0x7b, 0x19, 0x15, 0xa1, 0xac, 0xec, 0x9c, 0xc3, 0xd6, 0x63, 0xe7, 0x2c,
+	0x20, 0x7d, 0x90, 0x75, 0x75, 0xab, 0xd4, 0x60, 0x99, 0x7e, 0x12, 0xbb, 0x81, 0x6c, 0xcc, 0xec,
+	0xb3, 0x2f, 0x60, 0x62, 0x23, 0x0c, 0x0d, 0xf2, 0x68, 0x3f, 0xbc, 0x73, 0xd8, 0x0b, 0xc0, 0x20,
+	0xee, 0x2f, 0xfe, 0x07, 0x37, 0x1c, 0x81, 0x1b, 0x8d, 0xc0, 0x8d, 0x07, 0xb8, 0xab, 0x9f, 0x00,
+	0x66, 0x43, 0xf4, 0x13, 0x36, 0x5f, 0xb2, 0x44, 0xb2, 0x86, 0xa4, 0x43, 0x4e, 0x28, 0xf7, 0x9c,
+	0x34, 0x4b, 0xb9, 0xf7, 0x2a, 0x6b, 0x48, 0x3a, 0x92, 0x84, 0x72, 0x0f, 0xfd, 0x2c, 0xe5, 0x5e,
+	0xd8, 0x77, 0x70, 0xd2, 0xe3, 0x22, 0x19, 0xf7, 0x52, 0xcd, 0x16, 0xdc, 0x0f, 0xf5, 0x2d, 0x71,
+	0x5f, 0xf2, 0xea, 0x37, 0x00, 0x00, 0xff, 0xff, 0x1a, 0xf2, 0x3c, 0x46, 0xa7, 0x02, 0x00, 0x00,
 }
