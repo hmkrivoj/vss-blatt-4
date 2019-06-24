@@ -1,9 +1,9 @@
 FROM obraun/vss-protoactor-jenkins as builder
 COPY . /app
 WORKDIR /app
-RUN go build -o main main.go
+RUN go build -o cinema_hall/main cinema_hall/main.go
 
 FROM iron/go
-COPY --from=builder /app/main /app
+COPY --from=builder /app/cinema_hall/main /app/cinema_hall
 EXPOSE 52000-53000
-ENTRYPOINT [ "/app/main" ]
+ENTRYPOINT [ "/app/cinema_hall/main" ]
