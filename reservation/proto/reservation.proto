@@ -45,7 +45,8 @@ message Reservation {
     string token = 2;
     int64 user = 3;
     int64 showing = 4;
-    repeated Seat seats = 5;
+    bool confirmed = 5;
+    repeated Seat seats = 6;
 }
 
 message Seat {

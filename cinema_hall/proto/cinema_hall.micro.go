@@ -37,6 +37,7 @@ type CinemaHallService interface {
 	Create(ctx context.Context, in *CreateCinemaHallRequest, opts ...client.CallOption) (*CreateCinemaHallResponse, error)
 	Delete(ctx context.Context, in *DeleteCinemaHallRequest, opts ...client.CallOption) (*DeleteCinemaHallResponse, error)
 	FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, opts ...client.CallOption) (*FindAllCinemaHallsResponse, error)
+	Find(ctx context.Context, in *FindCinemaHallRequest, opts ...client.CallOption) (*FindCinemaHallResponse, error)
 }
 
 type cinemaHallService struct {
@@ -87,12 +88,23 @@ func (c *cinemaHallService) FindAll(ctx context.Context, in *FindAllCinemaHallsR
 	return out, nil
 }
 
+func (c *cinemaHallService) Find(ctx context.Context, in *FindCinemaHallRequest, opts ...client.CallOption) (*FindCinemaHallResponse, error) {
+	req := c.c.NewRequest(c.name, "CinemaHallService.Find", in)
+	out := new(FindCinemaHallResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for CinemaHallService service
 
 type CinemaHallServiceHandler interface {
 	Create(context.Context, *CreateCinemaHallRequest, *CreateCinemaHallResponse) error
 	Delete(context.Context, *DeleteCinemaHallRequest, *DeleteCinemaHallResponse) error
 	FindAll(context.Context, *FindAllCinemaHallsRequest, *FindAllCinemaHallsResponse) error
+	Find(context.Context, *FindCinemaHallRequest, *FindCinemaHallResponse) error
 }
 
 func RegisterCinemaHallServiceHandler(s server.Server, hdlr CinemaHallServiceHandler, opts ...server.HandlerOption) error {
@@ -100,6 +112,7 @@ func RegisterCinemaHallServiceHandler(s server.Server, hdlr CinemaHallServiceHan
 		Create(ctx context.Context, in *CreateCinemaHallRequest, out *CreateCinemaHallResponse) error
 		Delete(ctx context.Context, in *DeleteCinemaHallRequest, out *DeleteCinemaHallResponse) error
 		FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, out *FindAllCinemaHallsResponse) error
+		Find(ctx context.Context, in *FindCinemaHallRequest, out *FindCinemaHallResponse) error
 	}
 	type CinemaHallService struct {
 		cinemaHallService
@@ -122,4 +135,8 @@ func (h *cinemaHallServiceHandler) Delete(ctx context.Context, in *DeleteCinemaH
 
 func (h *cinemaHallServiceHandler) FindAll(ctx context.Context, in *FindAllCinemaHallsRequest, out *FindAllCinemaHallsResponse) error {
 	return h.CinemaHallServiceHandler.FindAll(ctx, in, out)
+}
+
+func (h *cinemaHallServiceHandler) Find(ctx context.Context, in *FindCinemaHallRequest, out *FindCinemaHallResponse) error {
+	return h.CinemaHallServiceHandler.Find(ctx, in, out)
 }

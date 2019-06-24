@@ -103,6 +103,10 @@ func (db *dataBase) findAll() []cinemaShowing {
 	return showings
 }
 
+func (db *dataBase) find(id int64) cinemaShowing {
+	return db.cinemaShowings[id]
+}
+
 type cinemaHallDeletedHandler struct {
 	db *dataBase
 }
@@ -122,6 +126,16 @@ func NewMovieDeletedHandler(db *dataBase) *movieDeletedHandler {
 type serviceHandler struct {
 	db  *dataBase
 	pub micro.Publisher
+}
+
+func (handler *serviceHandler) Find(cxt context.Context, req *protoCinemaShowing.FindCinemaShowingRequest, res *protoCinemaShowing.FindCinemaShowingResponse) error {
+	showing := handler.db.find(req.Id)
+	res.Showing = &protoCinemaShowing.CinemaShowing{
+		Id:         showing.id,
+		CinemaHall: showing.cinemaHall,
+		Movie:      showing.movie,
+	}
+	return nil
 }
 
 func NewCinemaShowingHandler(publisher micro.Publisher, db *dataBase) *serviceHandler {

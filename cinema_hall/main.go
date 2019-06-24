@@ -16,6 +16,17 @@ type CinemaHallHandler struct {
 	pub         micro.Publisher
 }
 
+func (handler *CinemaHallHandler) Find(cxt context.Context, req *proto.FindCinemaHallRequest, res *proto.FindCinemaHallResponse) error {
+	hall := handler.cinemaHalls[req.Id]
+	res.Hall = &proto.CinemaHall{
+		Id:   hall.id,
+		Name: hall.name,
+		Rows: hall.rows,
+		Cols: hall.cols,
+	}
+	return nil
+}
+
 func NewCinemaHallHandler(publisher micro.Publisher) *CinemaHallHandler {
 	handler := &CinemaHallHandler{}
 	handler.idCounter = 1
