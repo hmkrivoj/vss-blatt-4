@@ -6,6 +6,7 @@ pipeline {
                 docker { image 'obraun/vss-protoactor-jenkins' }
             }
             steps {
+                sh 'go get github.com/micro/protoc-gen-micro'
                 sh 'cd cinema_hall/proto && protoc --micro_out=. --go_out=. cinema_hall.proto'
                 sh 'cd cinema_hall && go build main.go'
             }
