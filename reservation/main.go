@@ -5,12 +5,13 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"sync"
+
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
-	protoCinemaHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
-	protoCinemaShowing "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_showing/proto"
+	protoHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
+	protoShowing "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_showing/proto"
 	protoReservation "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/reservation/proto"
-	"sync"
 )
 
 type seat struct {
@@ -70,7 +71,7 @@ func (db *dataBase) remove(id int64) (*reservation, error) {
 	return rsv, nil
 }
 
-func (db *dataBase) removeAllWhereShowingId(showing int64) []*reservation {
+func (db *dataBase) removeAllWhereShowingID(showing int64) ([]*reservation, error) {
 	reservations := db.findAll()
 	toBeRemoved := make([]int64, 0)
 	for _, reservation := range reservations {
@@ -80,10 +81,13 @@ func (db *dataBase) removeAllWhereShowingId(showing int64) []*reservation {
 	}
 	removed := make([]*reservation, 0)
 	for _, id := range toBeRemoved {
-		showing, _ := db.remove(id)
+		showing, err := db.remove(id)
+		if err != nil {
+			return removed, err
+		}
 		removed = append(removed, showing)
 	}
-	return removed
+	return removed, nil
 }
 
 func (db *dataBase) findAll() []*reservation {
@@ -118,30 +122,38 @@ func (db *dataBase) confirm(id int64, token string) *reservation {
 	return nil
 }
 
-type cinemaShowingDeletedHandler struct {
+type showingDeletedHandler struct {
 	db *dataBase
 }
 
-func NewCinemaShowingDeletedHandler(db *dataBase) *cinemaShowingDeletedHandler {
-	return &cinemaShowingDeletedHandler{db: db}
+func newCinemaShowingDeletedHandler(db *dataBase) *showingDeletedHandler {
+	return &showingDeletedHandler{db: db}
 }
 
 type serviceHandler struct {
-	mutex                sync.Mutex
-	db                   *dataBase
-	cinemaHallService    protoCinemaHall.CinemaHallService
-	cinemaShowingService protoCinemaShowing.CinemaShowingService
+	mutex             sync.Mutex
+	db                *dataBase
+	cinemaHallService protoHall.CinemaHallService
+	showingService    protoShowing.CinemaShowingService
 }
 
-func NewReservationHandler(cinemaShowingService protoCinemaShowing.CinemaShowingService, cinemaHallService protoCinemaHall.CinemaHallService, db *dataBase) *serviceHandler {
+func newReservationHandler(
+	showingService protoShowing.CinemaShowingService,
+	hallService protoHall.CinemaHallService,
+	db *dataBase,
+) *serviceHandler {
 	handler := &serviceHandler{}
 	handler.db = db
-	handler.cinemaShowingService = cinemaShowingService
-	handler.cinemaHallService = cinemaHallService
+	handler.showingService = showingService
+	handler.cinemaHallService = hallService
 	return handler
 }
 
-func (handler *serviceHandler) Confirm(cxt context.Context, req *protoReservation.ConfirmReservationRequest, res *protoReservation.ConfirmReservationResponse) error {
+func (handler *serviceHandler) Confirm(
+	cxt context.Context,
+	req *protoReservation.ConfirmReservationRequest,
+	res *protoReservation.ConfirmReservationResponse,
+) error {
 	rsv := handler.db.confirm(req.Id, req.Token)
 	pSeats := make([]*protoReservation.Seat, 0)
 	for _, s := range rsv.seats {
@@ -160,14 +172,24 @@ func (handler *serviceHandler) Confirm(cxt context.Context, req *protoReservatio
 	return nil
 }
 
-func (handler *serviceHandler) Create(ctx context.Context, req *protoReservation.CreateReservationRequest, res *protoReservation.CreateReservationResponse) error {
+func (handler *serviceHandler) Create(
+	ctx context.Context,
+	req *protoReservation.CreateReservationRequest,
+	res *protoReservation.CreateReservationResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
-	showingRes, err := handler.cinemaShowingService.Find(context.TODO(), &protoCinemaShowing.FindCinemaShowingRequest{Id: req.Showing})
+	showingRes, err := handler.showingService.Find(
+		context.TODO(),
+		&protoShowing.FindCinemaShowingRequest{Id: req.Showing},
+	)
 	if err != nil {
 		return err
 	}
-	hallRes, err := handler.cinemaHallService.Find(context.TODO(), &protoCinemaHall.FindCinemaHallRequest{Id: showingRes.Showing.CinemaHall})
+	hallRes, err := handler.cinemaHallService.Find(
+		context.TODO(),
+		&protoHall.FindCinemaHallRequest{Id: showingRes.Showing.CinemaHall},
+	)
 	if err != nil {
 		return err
 	}
@@ -181,7 +203,7 @@ func (handler *serviceHandler) Create(ctx context.Context, req *protoReservation
 		}
 		for _, reservedSeat := range reservedSeats {
 			if s.Col == reservedSeat.col || s.Row == reservedSeat.row {
-				return errors.New(fmt.Sprintf("seat (r%d, s%d) is already reserved", s.Row, s.Col))
+				return fmt.Errorf("seat (r%d, s%d) is already reserved", s.Row, s.Col)
 			}
 		}
 		seats = append(seats, seat{col: s.Col, row: s.Row})
@@ -210,7 +232,11 @@ func (handler *serviceHandler) Create(ctx context.Context, req *protoReservation
 	return nil
 }
 
-func (handler *serviceHandler) Delete(ctx context.Context, req *protoReservation.DeleteReservationRequest, res *protoReservation.DeleteReservationResponse) error {
+func (handler *serviceHandler) Delete(
+	ctx context.Context,
+	req *protoReservation.DeleteReservationRequest,
+	res *protoReservation.DeleteReservationResponse,
+) error {
 	rsv, err := handler.db.remove(req.Id)
 	if err != nil {
 		return err
@@ -232,7 +258,11 @@ func (handler *serviceHandler) Delete(ctx context.Context, req *protoReservation
 	return nil
 }
 
-func (handler *serviceHandler) FindAll(ctx context.Context, req *protoReservation.FindAllReservationsRequest, res *protoReservation.FindAllReservationsResponse) error {
+func (handler *serviceHandler) FindAll(
+	ctx context.Context,
+	req *protoReservation.FindAllReservationsRequest,
+	res *protoReservation.FindAllReservationsResponse,
+) error {
 	reservations := handler.db.findAll()
 	pReservations := make([]*protoReservation.Reservation, 0)
 	for _, rsv := range reservations {
@@ -253,21 +283,24 @@ func (handler *serviceHandler) FindAll(ctx context.Context, req *protoReservatio
 	return nil
 }
 
-func (handler *cinemaShowingDeletedHandler) MovieDeleted(cxt context.Context, event *protoCinemaShowing.DeleteCinemaShowingResponse) error {
-	handler.db.removeAllWhereShowingId(event.Showing.Id)
-	return nil
+func (handler *showingDeletedHandler) ShowingDeleted(
+	event *protoShowing.DeleteCinemaShowingResponse,
+) error {
+	// TODO
+	_, err := handler.db.removeAllWhereShowingID(event.Showing.Id)
+	return err
 }
 
 func main() {
 	service := micro.NewService(micro.Name("cinema.reservation.service"))
 	service.Init()
 
-	cinemaShowingService := protoCinemaShowing.NewCinemaShowingService("cinema.cinema_showing.service", service.Client())
-	cinemaHallService := protoCinemaHall.NewCinemaHallService("cinema.cinema_hall.service", service.Client())
+	cinemaShowingService := protoShowing.NewCinemaShowingService("cinema.cinema_showing.service", service.Client())
+	cinemaHallService := protoHall.NewCinemaHallService("cinema.cinema_hall.service", service.Client())
 	db := newDataBase()
 
-	handler := NewReservationHandler(cinemaShowingService, cinemaHallService, db)
-	deletedShowingHandler := NewCinemaShowingDeletedHandler(db)
+	handler := newReservationHandler(cinemaShowingService, cinemaHallService, db)
+	deletedShowingHandler := newCinemaShowingDeletedHandler(db)
 
 	err := micro.RegisterSubscriber("cinema.cinema_showing.deleted", service.Server(), deletedShowingHandler)
 	if err != nil {

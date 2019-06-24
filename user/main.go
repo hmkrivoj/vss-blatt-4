@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"errors"
+	"sync"
+
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
 	proto "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/user/proto"
-	"sync"
 )
 
 type UserHandler struct {
@@ -27,7 +28,11 @@ type user struct {
 	name string
 }
 
-func (handler *UserHandler) Create(ctx context.Context, req *proto.CreateUserRequest, res *proto.CreateUserResponse) error {
+func (handler *UserHandler) Create(
+	ctx context.Context,
+	req *proto.CreateUserRequest,
+	res *proto.CreateUserResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -48,7 +53,11 @@ func (handler *UserHandler) Create(ctx context.Context, req *proto.CreateUserReq
 	return nil
 }
 
-func (handler *UserHandler) Delete(ctx context.Context, req *proto.DeleteUserRequest, res *proto.DeleteUserResponse) error {
+func (handler *UserHandler) Delete(
+	ctx context.Context,
+	req *proto.DeleteUserRequest,
+	res *proto.DeleteUserResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -68,7 +77,11 @@ func (handler *UserHandler) Delete(ctx context.Context, req *proto.DeleteUserReq
 	return nil
 }
 
-func (handler *UserHandler) FindAll(ctx context.Context, req *proto.FindAllUsersRequest, res *proto.FindAllUsersResponse) error {
+func (handler *UserHandler) FindAll(
+	ctx context.Context,
+	req *proto.FindAllUsersRequest,
+	res *proto.FindAllUsersResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 

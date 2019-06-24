@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"errors"
+	"sync"
+
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
 	proto "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/movie/proto"
-	"sync"
 )
 
 type MovieHandler struct {
@@ -29,7 +30,11 @@ type movie struct {
 	title string
 }
 
-func (handler *MovieHandler) Create(ctx context.Context, req *proto.CreateMovieRequest, res *proto.CreateMovieResponse) error {
+func (handler *MovieHandler) Create(
+	ctx context.Context,
+	req *proto.CreateMovieRequest,
+	res *proto.CreateMovieResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -50,7 +55,11 @@ func (handler *MovieHandler) Create(ctx context.Context, req *proto.CreateMovieR
 	return nil
 }
 
-func (handler *MovieHandler) Delete(ctx context.Context, req *proto.DeleteMovieRequest, res *proto.DeleteMovieResponse) error {
+func (handler *MovieHandler) Delete(
+	ctx context.Context,
+	req *proto.DeleteMovieRequest,
+	res *proto.DeleteMovieResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -70,7 +79,11 @@ func (handler *MovieHandler) Delete(ctx context.Context, req *proto.DeleteMovieR
 	return err
 }
 
-func (handler *MovieHandler) FindAll(ctx context.Context, req *proto.FindAllMoviesRequest, res *proto.FindAllMoviesResponse) error {
+func (handler *MovieHandler) FindAll(
+	ctx context.Context,
+	req *proto.FindAllMoviesRequest,
+	res *proto.FindAllMoviesResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
