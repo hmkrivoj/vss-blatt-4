@@ -41,20 +41,27 @@ func TestMovieHandler_Create(t *testing.T) {
 	handler := NewMovieHandler(nil)
 	assert.Nil(t, handler.pub)
 	assert.Equal(t, 1, int(handler.idCounter))
-	assert.Equal(t, 0, int(len(handler.movies)))
+	assert.Equal(t, 0, len(handler.movies))
 	res := &proto.CreateMovieResponse{}
 	err := handler.Create(context.TODO(), &proto.CreateMovieRequest{Title: "Life of Brian"}, res)
 	assert.Nil(t, err)
-	assert.Equal(t, 1, int(len(handler.movies)))
+	assert.Equal(t, 1, len(handler.movies))
 	assert.Equal(t, 1, int(res.Movie.Id))
 	assert.Equal(t, "Life of Brian", res.Movie.Title)
 
 	res = &proto.CreateMovieResponse{}
 	err = handler.Create(context.TODO(), &proto.CreateMovieRequest{Title: "Monty Python and the holy grail"}, res)
 	assert.Nil(t, err)
-	assert.Equal(t, 2, int(len(handler.movies)))
+	assert.Equal(t, 2, len(handler.movies))
 	assert.Equal(t, 2, int(res.Movie.Id))
 	assert.Equal(t, "Monty Python and the holy grail", res.Movie.Title)
+
+	res = &proto.CreateMovieResponse{}
+	err = handler.Create(context.TODO(), &proto.CreateMovieRequest{Title: "Flying Circus"}, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 3, len(handler.movies))
+	assert.Equal(t, 3, int(res.Movie.Id))
+	assert.Equal(t, "Flying Circus", res.Movie.Title)
 }
 
 func TestMovieHandler_Delete(t *testing.T) {
@@ -72,7 +79,7 @@ func TestMovieHandler_Delete(t *testing.T) {
 		&proto.CreateMovieResponse{},
 	)
 	assert.Nil(t, err)
-	assert.Equal(t, 2, int(len(handler.movies)))
+	assert.Equal(t, 2, len(handler.movies))
 	// delete non existing movie
 	assert.Equal(t, 0, int(mock.noCalls))
 	err = handler.Delete(context.TODO(), &proto.DeleteMovieRequest{Id: 42}, &proto.DeleteMovieResponse{})
@@ -84,7 +91,7 @@ func TestMovieHandler_Delete(t *testing.T) {
 	err = handler.Delete(context.TODO(), &proto.DeleteMovieRequest{Id: 1}, res)
 	assert.Nil(t, err)
 	assert.Equal(t, 3, int(handler.idCounter))
-	assert.Equal(t, 1, int(len(handler.movies)))
+	assert.Equal(t, 1, len(handler.movies))
 	assert.Equal(t, 1, int(mock.noCalls))
 	assert.Equal(t, 1, int(res.Movie.Id))
 	assert.Equal(t, "Life of Brian", res.Movie.Title)
@@ -92,7 +99,7 @@ func TestMovieHandler_Delete(t *testing.T) {
 	// simulate error from publisher
 	mockError := newMockPubError()
 	handlerError := NewMovieHandler(mockError)
-	err = handlerError.Create(
+	_ = handlerError.Create(
 		context.TODO(),
 		&proto.CreateMovieRequest{Title: "Life of Brian"},
 		&proto.CreateMovieResponse{},
@@ -107,11 +114,11 @@ func TestMovieHandler_Delete(t *testing.T) {
 
 func TestMovieHandler_FindAll(t *testing.T) {
 	handler := NewMovieHandler(nil)
-	assert.Equal(t, 0, int(len(handler.movies)))
+	assert.Equal(t, 0, len(handler.movies))
 	res := &proto.FindAllMoviesResponse{}
 	err := handler.FindAll(context.TODO(), &proto.FindAllMoviesRequest{}, res)
 	assert.Nil(t, err)
-	assert.Equal(t, 0, int(len(res.Movies)))
+	assert.Equal(t, 0, len(res.Movies))
 	err = handler.Create(
 		context.TODO(),
 		&proto.CreateMovieRequest{Title: "Life of Brian"},
@@ -124,9 +131,9 @@ func TestMovieHandler_FindAll(t *testing.T) {
 		&proto.CreateMovieResponse{},
 	)
 	assert.Nil(t, err)
-	assert.Equal(t, 2, int(len(handler.movies)))
+	assert.Equal(t, 2, len(handler.movies))
 	res = &proto.FindAllMoviesResponse{}
 	err = handler.FindAll(context.TODO(), &proto.FindAllMoviesRequest{}, res)
 	assert.Nil(t, err)
-	assert.Equal(t, 2, int(len(res.Movies)))
+	assert.Equal(t, 2, len(res.Movies))
 }
