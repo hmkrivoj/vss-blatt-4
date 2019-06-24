@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
 	protoCinemaHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
@@ -60,9 +61,6 @@ func (db *dataBase) remove(id int64) (cinemaShowing, error) {
 }
 
 func (db *dataBase) removeAllWhereMovieId(movie int64) []cinemaShowing {
-	db.mutex.Lock()
-	defer db.mutex.Unlock()
-
 	showings := db.findAll()
 	toBeRemoved := make([]int64, 0)
 	for _, showing := range showings {
@@ -79,9 +77,6 @@ func (db *dataBase) removeAllWhereMovieId(movie int64) []cinemaShowing {
 }
 
 func (db *dataBase) removeAllWhereCinemaHallId(cinemaHall int64) []cinemaShowing {
-	db.mutex.Lock()
-	defer db.mutex.Unlock()
-
 	showings := db.findAll()
 	toBeRemoved := make([]int64, 0)
 	for _, showing := range showings {
@@ -181,12 +176,16 @@ func (handler *serviceHandler) FindAll(ctx context.Context, req *protoCinemaShow
 }
 
 func (handler *movieDeletedHandler) CinemaHallDeleted(cxt context.Context, event *protoCinemaHall.DeleteCinemaHallResponse) error {
+	fmt.Printf("received cinemahall delete event")
 	handler.db.removeAllWhereCinemaHallId(event.Hall.Id)
+	fmt.Printf("processed cinemahall delete event")
 	return nil
 }
 
 func (handler *cinemaHallDeletedHandler) MovieDeleted(cxt context.Context, event *protoMovie.DeleteMovieResponse) error {
+	fmt.Printf("received movie delete event")
 	handler.db.removeAllWhereCinemaHallId(event.Movie.Id)
+	fmt.Printf("processed movie delete event")
 	return nil
 }
 
