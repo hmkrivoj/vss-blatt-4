@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/micro/go-micro"
-	protoCinemaHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
-	protoCinemaShowing "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_showing/proto"
+	protoHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
+	protoShowing "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_showing/proto"
 	protoMovie "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/movie/proto"
 	protoReservation "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/reservation/proto"
 	protoUser "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/user/proto"
@@ -16,8 +17,8 @@ func main() {
 	service.Init()
 
 	movieService := protoMovie.NewMovieService("cinema.movie.service", service.Client())
-	cinemaHallService := protoCinemaHall.NewCinemaHallService("cinema.cinema_hall.service", service.Client())
-	cinemaShowingService := protoCinemaShowing.NewCinemaShowingService("cinema.cinema_showing.service", service.Client())
+	hallService := protoHall.NewCinemaHallService("cinema.cinema_hall.service", service.Client())
+	showingService := protoShowing.NewCinemaShowingService("cinema.cinema_showing.service", service.Client())
 	userService := protoUser.NewUserService("cinema.user.service", service.Client())
 	reservationService := protoReservation.NewReservationService("cinema.reservation.service", service.Client())
 
@@ -32,20 +33,39 @@ func main() {
 	findAllResponseMovie, _ = movieService.FindAll(context.TODO(), &protoMovie.FindAllMoviesRequest{})
 	fmt.Printf("Found %v\n", findAllResponseMovie)
 
-	createResponseHall, _ := cinemaHallService.Create(context.TODO(), &protoCinemaHall.CreateCinemaHallRequest{Name: "Alpha", Rows: 10, Cols: 20})
+	createResponseHall, _ := hallService.Create(
+		context.TODO(),
+		&protoHall.CreateCinemaHallRequest{
+			Name: "Alpha",
+			Rows: 10, Cols: 20,
+		},
+	)
 	fmt.Printf("Created %v\n", createResponseHall)
-	createResponseHall, _ = cinemaHallService.Create(context.TODO(), &protoCinemaHall.CreateCinemaHallRequest{Name: "Beta", Rows: 20, Cols: 10})
+	createResponseHall, _ = hallService.Create(
+		context.TODO(),
+		&protoHall.CreateCinemaHallRequest{
+			Name: "Beta",
+			Rows: 20,
+			Cols: 10,
+		},
+	)
 	fmt.Printf("Created %v\n", createResponseHall)
-	findAllResponseHall, _ := cinemaHallService.FindAll(context.TODO(), &protoCinemaHall.FindAllCinemaHallsRequest{})
+	findAllResponseHall, _ := hallService.FindAll(context.TODO(), &protoHall.FindAllCinemaHallsRequest{})
 	fmt.Printf("Found %v\n", findAllResponseHall)
-	deleteResponseHall, _ := cinemaHallService.Delete(context.TODO(), &protoCinemaHall.DeleteCinemaHallRequest{Id: 1})
+	deleteResponseHall, _ := hallService.Delete(context.TODO(), &protoHall.DeleteCinemaHallRequest{Id: 1})
 	fmt.Printf("Deleted %v\n", deleteResponseHall)
-	findAllResponseHall, _ = cinemaHallService.FindAll(context.TODO(), &protoCinemaHall.FindAllCinemaHallsRequest{})
+	findAllResponseHall, _ = hallService.FindAll(context.TODO(), &protoHall.FindAllCinemaHallsRequest{})
 	fmt.Printf("Found %v\n", findAllResponseHall)
 
-	createResponseShowing, _ := cinemaShowingService.Create(context.TODO(), &protoCinemaShowing.CreateCinemaShowingRequest{Movie: 2, CinemaHall: 2})
+	createResponseShowing, _ := showingService.Create(
+		context.TODO(),
+		&protoShowing.CreateCinemaShowingRequest{
+			Movie:      2,
+			CinemaHall: 2,
+		},
+	)
 	fmt.Printf("Created %v\n", createResponseShowing)
-	findAllResponseShowing, _ := cinemaShowingService.FindAll(context.TODO(), &protoCinemaShowing.FindAllCinemaShowingsRequest{})
+	findAllResponseShowing, _ := showingService.FindAll(context.TODO(), &protoShowing.FindAllCinemaShowingsRequest{})
 	fmt.Printf("Found %v\n", findAllResponseShowing)
 
 	createResponseUser, _ := userService.Create(context.TODO(), &protoUser.CreateUserRequest{Name: "Claire Grube"})
@@ -59,12 +79,34 @@ func main() {
 	findAllResponseUsers, _ := userService.FindAll(context.TODO(), &protoUser.FindAllUsersRequest{})
 	fmt.Printf("Found %v\n", findAllResponseUsers)
 
-	createResponseReservation, _ := reservationService.Create(context.TODO(), &protoReservation.CreateReservationRequest{Showing: 1, User: 4, Seats: []*protoReservation.Seat{{Col: 3, Row: 2}, {Col: 4, Row: 2}}})
+	createResponseReservation, _ := reservationService.Create(
+		context.TODO(),
+		&protoReservation.CreateReservationRequest{
+			Showing: 1,
+			User:    4,
+			Seats: []*protoReservation.Seat{
+				{Col: 3, Row: 2},
+				{Col: 4, Row: 2},
+			},
+		},
+	)
 	fmt.Printf("Created %v\n", createResponseReservation)
-	findAllResponseReservations, _ := reservationService.FindAll(context.TODO(), &protoReservation.FindAllReservationsRequest{})
+	findAllResponseReservations, _ := reservationService.FindAll(
+		context.TODO(),
+		&protoReservation.FindAllReservationsRequest{},
+	)
 	fmt.Printf("Found %v\n", findAllResponseReservations)
-	confirmResponse, _ := reservationService.Confirm(context.TODO(), &protoReservation.ConfirmReservationRequest{Id: 1, Token: createResponseReservation.Reservation.Token})
+	confirmResponse, _ := reservationService.Confirm(
+		context.TODO(),
+		&protoReservation.ConfirmReservationRequest{
+			Id:    1,
+			Token: createResponseReservation.Reservation.Token,
+		},
+	)
 	fmt.Printf("Created %v\n", confirmResponse)
-	findAllResponseReservations, _ = reservationService.FindAll(context.TODO(), &protoReservation.FindAllReservationsRequest{})
+	findAllResponseReservations, _ = reservationService.FindAll(
+		context.TODO(),
+		&protoReservation.FindAllReservationsRequest{},
+	)
 	fmt.Printf("Found %v\n", findAllResponseReservations)
 }

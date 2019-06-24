@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
+	"sync"
+
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
 	protoCinemaHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
 	protoCinemaShowing "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_showing/proto"
 	protoMovie "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/movie/proto"
-	"sync"
 )
 
 type cinemaShowing struct {
@@ -60,7 +60,7 @@ func (db *dataBase) remove(id int64) (cinemaShowing, error) {
 	return showing, nil
 }
 
-func (db *dataBase) removeAllWhereMovieId(movie int64) []cinemaShowing {
+func (db *dataBase) removeAllWhereMovieID(movie int64) ([]cinemaShowing, error) {
 	showings := db.findAll()
 	toBeRemoved := make([]int64, 0)
 	for _, showing := range showings {
@@ -70,13 +70,16 @@ func (db *dataBase) removeAllWhereMovieId(movie int64) []cinemaShowing {
 	}
 	removed := make([]cinemaShowing, 0)
 	for _, id := range toBeRemoved {
-		showing, _ := db.remove(id)
+		showing, err := db.remove(id)
+		if err != nil {
+			return removed, err
+		}
 		removed = append(removed, showing)
 	}
-	return removed
+	return removed, nil
 }
 
-func (db *dataBase) removeAllWhereCinemaHallId(cinemaHall int64) []cinemaShowing {
+func (db *dataBase) removeAllWhereCinemaHallID(cinemaHall int64) ([]cinemaShowing, error) {
 	showings := db.findAll()
 	toBeRemoved := make([]int64, 0)
 	for _, showing := range showings {
@@ -86,10 +89,13 @@ func (db *dataBase) removeAllWhereCinemaHallId(cinemaHall int64) []cinemaShowing
 	}
 	removed := make([]cinemaShowing, 0)
 	for _, id := range toBeRemoved {
-		showing, _ := db.remove(id)
+		showing, err := db.remove(id)
+		if err != nil {
+			return removed, err
+		}
 		removed = append(removed, showing)
 	}
-	return removed
+	return removed, nil
 }
 
 func (db *dataBase) findAll() []cinemaShowing {
@@ -111,7 +117,7 @@ type cinemaHallDeletedHandler struct {
 	db *dataBase
 }
 
-func NewCinemaHallDeletedHandler(db *dataBase) *cinemaHallDeletedHandler {
+func newCinemaHallDeletedHandler(db *dataBase) *cinemaHallDeletedHandler {
 	return &cinemaHallDeletedHandler{db: db}
 }
 
@@ -119,7 +125,7 @@ type movieDeletedHandler struct {
 	db *dataBase
 }
 
-func NewMovieDeletedHandler(db *dataBase) *movieDeletedHandler {
+func newMovieDeletedHandler(db *dataBase) *movieDeletedHandler {
 	return &movieDeletedHandler{db: db}
 }
 
@@ -128,7 +134,11 @@ type serviceHandler struct {
 	pub micro.Publisher
 }
 
-func (handler *serviceHandler) Find(cxt context.Context, req *protoCinemaShowing.FindCinemaShowingRequest, res *protoCinemaShowing.FindCinemaShowingResponse) error {
+func (handler *serviceHandler) Find(
+	cxt context.Context,
+	req *protoCinemaShowing.FindCinemaShowingRequest,
+	res *protoCinemaShowing.FindCinemaShowingResponse,
+) error {
 	showing := handler.db.find(req.Id)
 	res.Showing = &protoCinemaShowing.CinemaShowing{
 		Id:         showing.id,
@@ -138,14 +148,18 @@ func (handler *serviceHandler) Find(cxt context.Context, req *protoCinemaShowing
 	return nil
 }
 
-func NewCinemaShowingHandler(publisher micro.Publisher, db *dataBase) *serviceHandler {
+func newCinemaShowingHandler(publisher micro.Publisher, db *dataBase) *serviceHandler {
 	handler := &serviceHandler{}
 	handler.pub = publisher
 	handler.db = db
 	return handler
 }
 
-func (handler *serviceHandler) Create(ctx context.Context, req *protoCinemaShowing.CreateCinemaShowingRequest, res *protoCinemaShowing.CreateCinemaShowingResponse) error {
+func (handler *serviceHandler) Create(
+	ctx context.Context,
+	req *protoCinemaShowing.CreateCinemaShowingRequest,
+	res *protoCinemaShowing.CreateCinemaShowingResponse,
+) error {
 	showing := cinemaShowing{
 		movie:      req.Movie,
 		cinemaHall: req.CinemaHall,
@@ -161,7 +175,11 @@ func (handler *serviceHandler) Create(ctx context.Context, req *protoCinemaShowi
 	return nil
 }
 
-func (handler *serviceHandler) Delete(ctx context.Context, req *protoCinemaShowing.DeleteCinemaShowingRequest, res *protoCinemaShowing.DeleteCinemaShowingResponse) error {
+func (handler *serviceHandler) Delete(
+	ctx context.Context,
+	req *protoCinemaShowing.DeleteCinemaShowingRequest,
+	res *protoCinemaShowing.DeleteCinemaShowingResponse,
+) error {
 	showing, err := handler.db.remove(req.Id)
 	if err != nil {
 		return err
@@ -175,7 +193,11 @@ func (handler *serviceHandler) Delete(ctx context.Context, req *protoCinemaShowi
 	return err
 }
 
-func (handler *serviceHandler) FindAll(ctx context.Context, req *protoCinemaShowing.FindAllCinemaShowingsRequest, res *protoCinemaShowing.FindAllCinemaShowingsResponse) error {
+func (handler *serviceHandler) FindAll(
+	ctx context.Context,
+	req *protoCinemaShowing.FindAllCinemaShowingsRequest,
+	res *protoCinemaShowing.FindAllCinemaShowingsResponse,
+) error {
 	showings := handler.db.findAll()
 	pShowings := make([]*protoCinemaShowing.CinemaShowing, 0)
 	for _, showing := range showings {
@@ -189,18 +211,19 @@ func (handler *serviceHandler) FindAll(ctx context.Context, req *protoCinemaShow
 	return nil
 }
 
-func (handler *movieDeletedHandler) CinemaHallDeleted(cxt context.Context, event *protoCinemaHall.DeleteCinemaHallResponse) error {
-	fmt.Printf("received cinemahall delete event")
-	handler.db.removeAllWhereCinemaHallId(event.Hall.Id)
-	fmt.Printf("processed cinemahall delete event")
-	return nil
+func (handler *cinemaHallDeletedHandler) CinemaHallDeleted(
+	event *protoCinemaHall.DeleteCinemaHallResponse,
+) error {
+	// TODO
+	_, err := handler.db.removeAllWhereCinemaHallID(event.Hall.Id)
+	return err
 }
 
-func (handler *cinemaHallDeletedHandler) MovieDeleted(cxt context.Context, event *protoMovie.DeleteMovieResponse) error {
-	fmt.Printf("received movie delete event")
-	handler.db.removeAllWhereCinemaHallId(event.Movie.Id)
-	fmt.Printf("processed movie delete event")
-	return nil
+func (handler *movieDeletedHandler) MovieDeleted(
+	event *protoMovie.DeleteMovieResponse,
+) error {
+	_, err := handler.db.removeAllWhereMovieID(event.Movie.Id)
+	return err
 }
 
 func main() {
@@ -209,9 +232,9 @@ func main() {
 
 	publisher := micro.NewPublisher("cinema.cinema_showing.deleted", service.Client())
 	db := newDataBase()
-	handler := NewCinemaShowingHandler(publisher, db)
-	deletedHallHandler := NewCinemaHallDeletedHandler(db)
-	deletedMovieHandler := NewMovieDeletedHandler(db)
+	handler := newCinemaShowingHandler(publisher, db)
+	deletedHallHandler := newCinemaHallDeletedHandler(db)
+	deletedMovieHandler := newMovieDeletedHandler(db)
 
 	err := micro.RegisterSubscriber("cinema.cinema_hall.deleted", service.Server(), deletedHallHandler)
 	if err != nil {

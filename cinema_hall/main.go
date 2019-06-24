@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"errors"
+	"sync"
+
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
 	proto "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
-	"sync"
 )
 
 type CinemaHallHandler struct {
@@ -16,7 +17,11 @@ type CinemaHallHandler struct {
 	pub         micro.Publisher
 }
 
-func (handler *CinemaHallHandler) Find(cxt context.Context, req *proto.FindCinemaHallRequest, res *proto.FindCinemaHallResponse) error {
+func (handler *CinemaHallHandler) Find(
+	cxt context.Context,
+	req *proto.FindCinemaHallRequest,
+	res *proto.FindCinemaHallResponse,
+) error {
 	hall := handler.cinemaHalls[req.Id]
 	res.Hall = &proto.CinemaHall{
 		Id:   hall.id,
@@ -42,7 +47,11 @@ type cinemaHall struct {
 	cols int32
 }
 
-func (handler *CinemaHallHandler) Create(ctx context.Context, req *proto.CreateCinemaHallRequest, res *proto.CreateCinemaHallResponse) error {
+func (handler *CinemaHallHandler) Create(
+	ctx context.Context,
+	req *proto.CreateCinemaHallRequest,
+	res *proto.CreateCinemaHallResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -67,7 +76,11 @@ func (handler *CinemaHallHandler) Create(ctx context.Context, req *proto.CreateC
 	return nil
 }
 
-func (handler *CinemaHallHandler) Delete(ctx context.Context, req *proto.DeleteCinemaHallRequest, res *proto.DeleteCinemaHallResponse) error {
+func (handler *CinemaHallHandler) Delete(
+	ctx context.Context,
+	req *proto.DeleteCinemaHallRequest,
+	res *proto.DeleteCinemaHallResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -89,7 +102,11 @@ func (handler *CinemaHallHandler) Delete(ctx context.Context, req *proto.DeleteC
 	return err
 }
 
-func (handler *CinemaHallHandler) FindAll(ctx context.Context, req *proto.FindAllCinemaHallsRequest, res *proto.FindAllCinemaHallsResponse) error {
+func (handler *CinemaHallHandler) FindAll(
+	ctx context.Context,
+	req *proto.FindAllCinemaHallsRequest,
+	res *proto.FindAllCinemaHallsResponse,
+) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
