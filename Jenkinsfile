@@ -1,6 +1,15 @@
 pipeline {
     agent none
     stages {
+        stage('Build') {
+            agent {
+                docker { image 'obraun/vss-protoactor-jenkins' }
+            }
+            steps {
+                sh 'cd proto && protoc --micro_out=. --go_out=. cinema_hall.proto'
+                sh 'go build main.go'
+            }
+        }
         stage('Lint') {
             agent {
                 docker { image 'obraun/vss-protoactor-jenkins' }
@@ -9,5 +18,11 @@ pipeline {
                 sh 'golangci-lint run --deadline 20m --enable-all'
             }
         }
+        stage('Build Docker Image') {
+                    agent any
+                    steps {
+                        sh "docker-build-and-push -b ${BRANCH_NAME} -s cinema_hall -f cinema_hall.dockerfile"
+                    }
+                }
     }
 }
