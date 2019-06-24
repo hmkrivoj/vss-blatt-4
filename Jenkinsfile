@@ -29,6 +29,14 @@ pipeline {
                 sh 'golangci-lint run --deadline 20m --enable-all'
             }
         }
+        stage('Test') {
+            agent {
+                docker { image 'obraun/vss-protoactor-jenkins' }
+            }
+            steps {
+                sh 'go test ./...'
+            }
+        }
         stage('Build Docker Image') {
                     agent any
                     steps {
