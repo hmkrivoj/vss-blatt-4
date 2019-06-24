@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+service ReservationService {
+    rpc Create (CreateReservationRequest) returns (CreateReservationResponse);
+    rpc Confirm (ConfirmReservationRequest) returns (ConfirmReservationResponse);
+    rpc Delete (DeleteReservationRequest) returns (DeleteReservationResponse);
+    rpc FindAll (FindAllReservationsRequest) returns (FindAllReservationsResponse);
+}
+
+message CreateReservationRequest {
+    int64 showing = 1;
+    int64 user = 2;
+    repeated Seat seats = 3;
+}
+
+message CreateReservationResponse {
+    Reservation reservation = 1;
+}
+
+message ConfirmReservationRequest {
+    int64 id = 1;
+    string token = 2;
+}
+
+message ConfirmReservationResponse {
+    Reservation reservation = 1;
+}
+
+message DeleteReservationRequest {
+    int64 id = 1;
+}
+
+message DeleteReservationResponse {
+    Reservation reservation = 1;
+}
+
+message FindAllReservationsRequest {}
+
+message FindAllReservationsResponse {
+    repeated Reservation reservations = 1;
+}
+
+message Reservation {
+    int64 id = 1;
+    string token = 2;
+    int64 user = 3;
+    int64 showing = 4;
+    bool confirmed = 5;
+    repeated Seat seats = 6;
+}
+
+message Seat {
+    int32 row = 1;
+    int32 col = 2;
+}

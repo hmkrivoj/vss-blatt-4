@@ -37,6 +37,7 @@ type CinemaShowingService interface {
 	Create(ctx context.Context, in *CreateCinemaShowingRequest, opts ...client.CallOption) (*CreateCinemaShowingResponse, error)
 	Delete(ctx context.Context, in *DeleteCinemaShowingRequest, opts ...client.CallOption) (*DeleteCinemaShowingResponse, error)
 	FindAll(ctx context.Context, in *FindAllCinemaShowingsRequest, opts ...client.CallOption) (*FindAllCinemaShowingsResponse, error)
+	Find(ctx context.Context, in *FindCinemaShowingRequest, opts ...client.CallOption) (*FindCinemaShowingResponse, error)
 }
 
 type cinemaShowingService struct {
@@ -87,12 +88,23 @@ func (c *cinemaShowingService) FindAll(ctx context.Context, in *FindAllCinemaSho
 	return out, nil
 }
 
+func (c *cinemaShowingService) Find(ctx context.Context, in *FindCinemaShowingRequest, opts ...client.CallOption) (*FindCinemaShowingResponse, error) {
+	req := c.c.NewRequest(c.name, "CinemaShowingService.Find", in)
+	out := new(FindCinemaShowingResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for CinemaShowingService service
 
 type CinemaShowingServiceHandler interface {
 	Create(context.Context, *CreateCinemaShowingRequest, *CreateCinemaShowingResponse) error
 	Delete(context.Context, *DeleteCinemaShowingRequest, *DeleteCinemaShowingResponse) error
 	FindAll(context.Context, *FindAllCinemaShowingsRequest, *FindAllCinemaShowingsResponse) error
+	Find(context.Context, *FindCinemaShowingRequest, *FindCinemaShowingResponse) error
 }
 
 func RegisterCinemaShowingServiceHandler(s server.Server, hdlr CinemaShowingServiceHandler, opts ...server.HandlerOption) error {
@@ -100,6 +112,7 @@ func RegisterCinemaShowingServiceHandler(s server.Server, hdlr CinemaShowingServ
 		Create(ctx context.Context, in *CreateCinemaShowingRequest, out *CreateCinemaShowingResponse) error
 		Delete(ctx context.Context, in *DeleteCinemaShowingRequest, out *DeleteCinemaShowingResponse) error
 		FindAll(ctx context.Context, in *FindAllCinemaShowingsRequest, out *FindAllCinemaShowingsResponse) error
+		Find(ctx context.Context, in *FindCinemaShowingRequest, out *FindCinemaShowingResponse) error
 	}
 	type CinemaShowingService struct {
 		cinemaShowingService
@@ -122,4 +135,8 @@ func (h *cinemaShowingServiceHandler) Delete(ctx context.Context, in *DeleteCine
 
 func (h *cinemaShowingServiceHandler) FindAll(ctx context.Context, in *FindAllCinemaShowingsRequest, out *FindAllCinemaShowingsResponse) error {
 	return h.CinemaShowingServiceHandler.FindAll(ctx, in, out)
+}
+
+func (h *cinemaShowingServiceHandler) Find(ctx context.Context, in *FindCinemaShowingRequest, out *FindCinemaShowingResponse) error {
+	return h.CinemaShowingServiceHandler.Find(ctx, in, out)
 }

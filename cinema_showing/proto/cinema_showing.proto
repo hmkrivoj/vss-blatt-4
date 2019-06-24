@@ -4,6 +4,7 @@ service CinemaShowingService {
     rpc Create (CreateCinemaShowingRequest) returns (CreateCinemaShowingResponse);
     rpc Delete (DeleteCinemaShowingRequest) returns (DeleteCinemaShowingResponse);
     rpc FindAll (FindAllCinemaShowingsRequest) returns (FindAllCinemaShowingsResponse);
+    rpc Find (FindCinemaShowingRequest) returns (FindCinemaShowingResponse);
 }
 
 message CreateCinemaShowingRequest {
@@ -27,6 +28,14 @@ message FindAllCinemaShowingsRequest {}
 
 message FindAllCinemaShowingsResponse {
     repeated CinemaShowing showings = 1;
+}
+
+message FindCinemaShowingRequest {
+    int64 id = 1;
+}
+
+message FindCinemaShowingResponse {
+    CinemaShowing showing = 1;
 }
 
 message CinemaShowing {

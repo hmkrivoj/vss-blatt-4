@@ -4,6 +4,7 @@ service CinemaHallService {
     rpc Create (CreateCinemaHallRequest) returns (CreateCinemaHallResponse);
     rpc Delete (DeleteCinemaHallRequest) returns (DeleteCinemaHallResponse);
     rpc FindAll (FindAllCinemaHallsRequest) returns (FindAllCinemaHallsResponse);
+    rpc Find (FindCinemaHallRequest) returns (FindCinemaHallResponse);
 }
 
 message CreateCinemaHallRequest {
@@ -28,6 +29,14 @@ message FindAllCinemaHallsRequest {}
 
 message FindAllCinemaHallsResponse {
     repeated CinemaHall halls = 1;
+}
+
+message FindCinemaHallRequest {
+    int64 id = 1;
+}
+
+message FindCinemaHallResponse {
+    CinemaHall hall = 1;
 }
 
 message CinemaHall {
