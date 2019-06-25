@@ -7,19 +7,22 @@ import (
 
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
-	proto "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/user/proto"
+	protoReservation "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/reservation/proto"
+	protoUser "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/user/proto"
 )
 
 type UserHandler struct {
-	mutex     sync.Mutex
-	idCounter int64
-	users     map[int64]user
+	mutex              sync.Mutex
+	idCounter          int64
+	users              map[int64]user
+	reservationService protoReservation.ReservationService
 }
 
-func NewUserHandler() *UserHandler {
+func NewUserHandler(reservationService protoReservation.ReservationService) *UserHandler {
 	handler := &UserHandler{}
 	handler.idCounter = 1
 	handler.users = make(map[int64]user)
+	handler.reservationService = reservationService
 	return handler
 }
 
@@ -30,8 +33,8 @@ type user struct {
 
 func (handler *UserHandler) Create(
 	ctx context.Context,
-	req *proto.CreateUserRequest,
-	res *proto.CreateUserResponse,
+	req *protoUser.CreateUserRequest,
+	res *protoUser.CreateUserResponse,
 ) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
@@ -45,7 +48,7 @@ func (handler *UserHandler) Create(
 	}
 	handler.users[id] = user
 
-	res.User = &proto.User{
+	res.User = &protoUser.User{
 		Id:   user.id,
 		Name: user.name,
 	}
@@ -55,21 +58,32 @@ func (handler *UserHandler) Create(
 
 func (handler *UserHandler) Delete(
 	ctx context.Context,
-	req *proto.DeleteUserRequest,
-	res *proto.DeleteUserResponse,
+	req *protoUser.DeleteUserRequest,
+	res *protoUser.DeleteUserResponse,
 ) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
-	// TODO make sure only user with no reservations can be deleted
 	if _, ok := handler.users[req.Id]; !ok {
 		return errors.New("no such id")
+	}
+	reservations, err := handler.reservationService.FindAll(
+		context.TODO(),
+		&protoReservation.FindAllReservationsRequest{},
+	)
+	if err != nil {
+		return err
+	}
+	for _, reservation := range reservations.Reservations {
+		if reservation.User == req.Id {
+			return errors.New("this user still has reservations")
+		}
 	}
 
 	user := handler.users[req.Id]
 	delete(handler.users, req.Id)
 
-	res.User = &proto.User{
+	res.User = &protoUser.User{
 		Id:   user.id,
 		Name: user.name,
 	}
@@ -79,15 +93,15 @@ func (handler *UserHandler) Delete(
 
 func (handler *UserHandler) FindAll(
 	ctx context.Context,
-	req *proto.FindAllUsersRequest,
-	res *proto.FindAllUsersResponse,
+	req *protoUser.FindAllUsersRequest,
+	res *protoUser.FindAllUsersResponse,
 ) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
-	users := make([]*proto.User, 0)
+	users := make([]*protoUser.User, 0)
 	for _, user := range handler.users {
-		users = append(users, &proto.User{
+		users = append(users, &protoUser.User{
 			Id:   user.id,
 			Name: user.name,
 		})
@@ -101,9 +115,11 @@ func main() {
 	service := micro.NewService(micro.Name("cinema.user.service"))
 	service.Init()
 
-	handler := NewUserHandler()
+	reservationService := protoReservation.NewReservationService("cinema.reservation.service", service.Client())
 
-	err := proto.RegisterUserServiceHandler(service.Server(), handler)
+	handler := NewUserHandler(reservationService)
+
+	err := protoUser.RegisterUserServiceHandler(service.Server(), handler)
 	if err != nil {
 		log.Fatal(err)
 	}
