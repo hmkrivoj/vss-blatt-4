@@ -1,7 +1,7 @@
 FROM obraun/vss-protoactor-jenkins as builder
 COPY . /app
 WORKDIR /app
-RUN go build -o reservation/main reservation/main
+RUN go build -o reservation/main reservation
 
 FROM iron/go
 COPY --from=builder /app/reservation/main /app/reservation
