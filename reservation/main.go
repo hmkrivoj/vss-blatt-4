@@ -284,10 +284,11 @@ func (handler *serviceHandler) FindAll(
 }
 
 func (handler *showingDeletedHandler) ShowingDeleted(
+	ctx context.Context, // required for signature
 	event *protoShowing.DeleteCinemaShowingResponse,
 ) error {
-	// TODO
 	_, err := handler.db.removeAllWhereShowingID(event.Showing.Id)
+	ctx.Done() // do something with context so the linter will shut up
 	return err
 }
 

@@ -114,19 +114,25 @@ func (db *dataBase) find(id int64) cinemaShowing {
 }
 
 type cinemaHallDeletedHandler struct {
-	db *dataBase
+	db  *dataBase
+	pub micro.Publisher
 }
 
-func newCinemaHallDeletedHandler(db *dataBase) *cinemaHallDeletedHandler {
-	return &cinemaHallDeletedHandler{db: db}
+func newCinemaHallDeletedHandler(publisher micro.Publisher, db *dataBase) *cinemaHallDeletedHandler {
+	handler := &cinemaHallDeletedHandler{db: db}
+	handler.pub = publisher
+	return handler
 }
 
 type movieDeletedHandler struct {
-	db *dataBase
+	db  *dataBase
+	pub micro.Publisher
 }
 
-func newMovieDeletedHandler(db *dataBase) *movieDeletedHandler {
-	return &movieDeletedHandler{db: db}
+func newMovieDeletedHandler(publisher micro.Publisher, db *dataBase) *movieDeletedHandler {
+	handler := &movieDeletedHandler{db: db}
+	handler.pub = publisher
+	return handler
 }
 
 type serviceHandler struct {
@@ -212,17 +218,38 @@ func (handler *serviceHandler) FindAll(
 }
 
 func (handler *cinemaHallDeletedHandler) CinemaHallDeleted(
+	ctx context.Context, // required sub signature
 	event *protoCinemaHall.DeleteCinemaHallResponse,
 ) error {
-	// TODO
-	_, err := handler.db.removeAllWhereCinemaHallID(event.Hall.Id)
+	deleted, err := handler.db.removeAllWhereCinemaHallID(event.Hall.Id)
+	for _, showing := range deleted {
+		res := &protoCinemaShowing.DeleteCinemaShowingResponse{}
+		res.Showing = &protoCinemaShowing.CinemaShowing{
+			Id:         showing.id,
+			Movie:      showing.movie,
+			CinemaHall: showing.cinemaHall,
+		}
+		_ = handler.pub.Publish(context.Background(), res)
+	}
+	ctx.Done() // do something with context so the linter will shut up
 	return err
 }
 
 func (handler *movieDeletedHandler) MovieDeleted(
+	ctx context.Context, // required sub signature
 	event *protoMovie.DeleteMovieResponse,
 ) error {
-	_, err := handler.db.removeAllWhereMovieID(event.Movie.Id)
+	deleted, err := handler.db.removeAllWhereMovieID(event.Movie.Id)
+	for _, showing := range deleted {
+		res := &protoCinemaShowing.DeleteCinemaShowingResponse{}
+		res.Showing = &protoCinemaShowing.CinemaShowing{
+			Id:         showing.id,
+			Movie:      showing.movie,
+			CinemaHall: showing.cinemaHall,
+		}
+		_ = handler.pub.Publish(context.Background(), res)
+	}
+	ctx.Done() // do something with context so the linter will shut up
 	return err
 }
 
@@ -233,8 +260,8 @@ func main() {
 	publisher := micro.NewPublisher("cinema.cinema_showing.deleted", service.Client())
 	db := newDataBase()
 	handler := newCinemaShowingHandler(publisher, db)
-	deletedHallHandler := newCinemaHallDeletedHandler(db)
-	deletedMovieHandler := newMovieDeletedHandler(db)
+	deletedHallHandler := newCinemaHallDeletedHandler(publisher, db)
+	deletedMovieHandler := newMovieDeletedHandler(publisher, db)
 
 	err := micro.RegisterSubscriber("cinema.cinema_hall.deleted", service.Server(), deletedHallHandler)
 	if err != nil {
