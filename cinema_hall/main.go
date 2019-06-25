@@ -14,7 +14,7 @@ type CinemaHallHandler struct {
 	mutex       sync.Mutex
 	idCounter   int64
 	cinemaHalls map[int64]cinemaHall
-	pub         micro.Publisher
+	pub         micro.Publisher // for propagating deletes
 }
 
 func (handler *CinemaHallHandler) Find(
@@ -52,6 +52,7 @@ func (handler *CinemaHallHandler) Create(
 	req *proto.CreateCinemaHallRequest,
 	res *proto.CreateCinemaHallResponse,
 ) error {
+	// lock to avoid troubles with findAll
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -81,6 +82,7 @@ func (handler *CinemaHallHandler) Delete(
 	req *proto.DeleteCinemaHallRequest,
 	res *proto.DeleteCinemaHallResponse,
 ) error {
+	// lock to avoid troubles with findAll
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 
@@ -107,6 +109,7 @@ func (handler *CinemaHallHandler) FindAll(
 	req *proto.FindAllCinemaHallsRequest,
 	res *proto.FindAllCinemaHallsResponse,
 ) error {
+	// lock to avoid troubles while iterating over data
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
 

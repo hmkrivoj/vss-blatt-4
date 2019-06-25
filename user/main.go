@@ -63,10 +63,11 @@ func (handler *UserHandler) Delete(
 ) error {
 	handler.mutex.Lock()
 	defer handler.mutex.Unlock()
-
+	// check if user exists
 	if _, ok := handler.users[req.Id]; !ok {
 		return errors.New("no such id")
 	}
+	// check if user has reservations
 	reservations, err := handler.reservationService.FindAll(
 		context.TODO(),
 		&protoReservation.FindAllReservationsRequest{},
@@ -79,10 +80,9 @@ func (handler *UserHandler) Delete(
 			return errors.New("this user still has reservations")
 		}
 	}
-
+	// delete user and track user
 	user := handler.users[req.Id]
 	delete(handler.users, req.Id)
-
 	res.User = &protoUser.User{
 		Id:   user.id,
 		Name: user.name,
