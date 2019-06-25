@@ -13,12 +13,12 @@ pipeline {
                 sh 'cd cinema_showing/proto && protoc --micro_out=. --go_out=. cinema_showing.proto'
                 sh 'cd user/proto && protoc --micro_out=. --go_out=. user.proto'
                 sh 'cd reservation/proto && protoc --micro_out=. --go_out=. reservation.proto'
-                sh 'cd cinema_hall && go build main.go'
-                sh 'cd movie && go build main.go'
-                sh 'cd cinema_showing && go build main.go'
-                sh 'cd user && go build main.go'
-                sh 'cd reservation && go build main.go'
-                sh 'cd client && go build main.go'
+                sh 'cd cinema_hall && go build main'
+                sh 'cd movie && go build main'
+                sh 'cd cinema_showing && go build main'
+                sh 'cd user && go build main'
+                sh 'cd reservation && go build main'
+                sh 'cd client && go build main'
             }
         }
         stage('Lint') {

@@ -1,7 +1,7 @@
 FROM obraun/vss-protoactor-jenkins as builder
 COPY . /app
 WORKDIR /app
-RUN go build -o cinema_showing/main cinema_showing/main.go
+RUN go build -o cinema_showing/main cinema_showing/main
 
 FROM iron/go
 COPY --from=builder /app/cinema_showing/main /app/cinema_showing
