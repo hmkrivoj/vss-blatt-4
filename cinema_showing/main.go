@@ -212,17 +212,20 @@ func (handler *serviceHandler) FindAll(
 }
 
 func (handler *cinemaHallDeletedHandler) CinemaHallDeleted(
+	ctx context.Context, // required sub signature
 	event *protoCinemaHall.DeleteCinemaHallResponse,
 ) error {
-	// TODO
 	_, err := handler.db.removeAllWhereCinemaHallID(event.Hall.Id)
+	ctx.Done() // do something with context so the linter will shut up
 	return err
 }
 
 func (handler *movieDeletedHandler) MovieDeleted(
+	ctx context.Context, // required sub signature
 	event *protoMovie.DeleteMovieResponse,
 ) error {
 	_, err := handler.db.removeAllWhereMovieID(event.Movie.Id)
+	ctx.Done() // do something with context so the linter will shut up
 	return err
 }
 
