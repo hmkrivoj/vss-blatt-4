@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/micro/go-micro"
 	protoCinemaHall "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_hall/proto"
 	protoCinemaShowing "github.com/ob-vss-ss19/blatt-4-forever_alone_2_electric_boogaloo/cinema_showing/proto"
